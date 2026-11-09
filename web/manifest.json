@@ -1,0 +1,11 @@
+{
+  "name": "وزن — اجعل وقتك يزن أكثر",
+  "short_name": "وزن",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FBF7EE",
+  "theme_color": "#0E3A31",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl"
+}

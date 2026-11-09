@@ -1,0 +1,18 @@
+# Flutter/Dart
+.dart_tool/
+.packages
+.pub-cache/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Design reference (generated)
+.design_ref/
+
+# OS
+.DS_Store
