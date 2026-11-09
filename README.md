@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/domz-1/wazn/main/assets/branding/logo.svg" alt="Wazn logo" width="140" height="140">
+<img src="https://raw.githubusercontent.com/domz-1/wazn/main/assets/branding/logo.png" alt="Wazn logo" width="140" height="140">
 
 <img src="https://img.shields.io/badge/Flutter-3.4+-02569B?logo=flutter&logoColor=white" alt="Flutter">
 <img src="https://img.shields.io/badge/Dart-3.4+-0175C2?logo=dart&logoColor=white" alt="Dart">
