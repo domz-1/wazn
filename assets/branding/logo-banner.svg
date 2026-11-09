@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FBF7EE"/>
+      <stop offset="100%" stop-color="#F3EAD6"/>
+    </linearGradient>
+    <linearGradient id="emerald" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1F8A70"/>
+      <stop offset="100%" stop-color="#0E4A3D"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F4D78A"/>
+      <stop offset="100%" stop-color="#D4A24C"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="url(#bg)"/>
+  <g transform="translate(120 100)">
+    <rect width="200" height="200" rx="50" fill="url(#emerald)"/>
+    <line x1="50" y1="58" x2="150" y2="58" stroke="url(#gold)" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="100" cy="58" r="9" fill="url(#gold)"/>
+    <path d="M100 90 C84 81 66 81 50 86 L50 152 C66 147 84 147 100 156 C116 147 134 147 150 152 L150 86 C134 81 116 81 100 90 Z" fill="#FBF7EE"/>
+    <line x1="100" y1="90" x2="100" y2="156" stroke="#14594A" stroke-width="4"/>
+  </g>
+  <text x="360" y="210" font-family="Arial, sans-serif" font-size="110" font-weight="700" fill="#0E3A31">وزن</text>
+  <text x="362" y="270" font-family="Arial, sans-serif" font-size="30" fill="#546A63">اجعل وقتك يزن أكثر</text>
+</svg>

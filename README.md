@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="https://raw.githubusercontent.com/domz-1/wazn/main/assets/branding/logo.svg" alt="Wazn logo" width="140" height="140">
+
 <img src="https://img.shields.io/badge/Flutter-3.4+-02569B?logo=flutter&logoColor=white" alt="Flutter">
 <img src="https://img.shields.io/badge/Dart-3.4+-0175C2?logo=dart&logoColor=white" alt="Dart">
 <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web-0E3A31" alt="Platforms">
@@ -27,16 +29,16 @@
 
 ## 🎨 الهوية البصرية
 
-| اللون | القيمة | الاستخدام |
-|------|--------|-----------|
-| زمرد الليل | `#07241F` | خلفيات داكنة |
-| زمرد | `#0E3A31` | الأساسي |
-| أخضر الواحة | `#1F6B5C` | العناصر النشطة |
-| ذهب | `#E9C46A` | الإجراء الرئيسي |
-| ذهب عتيق | `#D4A24C` | التدرجات |
-| رمل | `#FBF7EE` | الخلفية الفاتحة |
-| رمل دافئ | `#F1E9D8` | البطاقات |
-| حبر | `#10251F` | النصوص |
+| اللون       | القيمة    | الاستخدام       |
+| ----------- | --------- | --------------- |
+| زمرد الليل  | `#07241F` | خلفيات داكنة    |
+| زمرد        | `#0E3A31` | الأساسي         |
+| أخضر الواحة | `#1F6B5C` | العناصر النشطة  |
+| ذهب         | `#E9C46A` | الإجراء الرئيسي |
+| ذهب عتيق    | `#D4A24C` | التدرجات        |
+| رمل         | `#FBF7EE` | الخلفية الفاتحة |
+| رمل دافئ    | `#F1E9D8` | البطاقات        |
+| حبر         | `#10251F` | النصوص          |
 
 **الخطوط:** Aref Ruqaa (الشعار) · IBM Plex Sans Arabic (الواجهة) · Amiri (المصحف والأحاديث والأذكار).
 
@@ -44,27 +46,27 @@
 
 ## 📱 الشاشات (25)
 
-| # | الشاشة | الملف |
-|---|--------|-------|
-| ١ | البداية | `splash_screen.dart` |
-| ٢ | الإعداد — التطبيقات | `onboarding_apps_screen.dart` |
-| ٣ | الإعداد — الافتراضيات | `onboarding_defaults_screen.dart` |
-| ٤ | الرئيسية | `home_screen.dart` |
-| ٥ | الحظر والتأجيل | `block_screen.dart` |
-| ٦ | التنبيه والويدجت | `pre_block_alert_screen.dart` |
-| ٧ | تم فك القفل | `unlocked_screen.dart` |
-| ٨ | المصحف | `worship_screen.dart` |
-| ٩ | الأذكار | `adhkar_screen.dart` |
-| ١٠ | عدّاد التسبيح | `dhikr_counter_screen.dart` |
-| ١١ | القراءة والتفسير | `reading_screen.dart` |
-| ١٢ | الإحصاءات | `stats_screen.dart` |
-| ١٣ | الإعدادات | `settings_screen.dart` |
-| ١٤ | نية الفتح | `open_intent_screen.dart` |
-| ١٥ | الحظر التدريجي | `gradual_block_screen.dart` |
-| ١٦ | أحتاجه الآن | `emergency_screen.dart` |
-| ١٧ | التدبّر | `reflection_screen.dart` |
-| ١٨ | شريك المساءلة | `accountability_screen.dart` |
-| ١٩ | الإذن غير مفعّل | `permission_screen.dart` |
+| #   | الشاشة                | الملف                             |
+| --- | --------------------- | --------------------------------- |
+| ١   | البداية               | `splash_screen.dart`              |
+| ٢   | الإعداد — التطبيقات   | `onboarding_apps_screen.dart`     |
+| ٣   | الإعداد — الافتراضيات | `onboarding_defaults_screen.dart` |
+| ٤   | الرئيسية              | `home_screen.dart`                |
+| ٥   | الحظر والتأجيل        | `block_screen.dart`               |
+| ٦   | التنبيه والويدجت      | `pre_block_alert_screen.dart`     |
+| ٧   | تم فك القفل           | `unlocked_screen.dart`            |
+| ٨   | المصحف                | `worship_screen.dart`             |
+| ٩   | الأذكار               | `adhkar_screen.dart`              |
+| ١٠  | عدّاد التسبيح         | `dhikr_counter_screen.dart`       |
+| ١١  | القراءة والتفسير      | `reading_screen.dart`             |
+| ١٢  | الإحصاءات             | `stats_screen.dart`               |
+| ١٣  | الإعدادات             | `settings_screen.dart`            |
+| ١٤  | نية الفتح             | `open_intent_screen.dart`         |
+| ١٥  | الحظر التدريجي        | `gradual_block_screen.dart`       |
+| ١٦  | أحتاجه الآن           | `emergency_screen.dart`           |
+| ١٧  | التدبّر               | `reflection_screen.dart`          |
+| ١٨  | شريك المساءلة         | `accountability_screen.dart`      |
+| ١٩  | الإذن غير مفعّل       | `permission_screen.dart`          |
 
 ---
 

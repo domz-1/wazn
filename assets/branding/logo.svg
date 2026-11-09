@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="emerald" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1F8A70"/>
+      <stop offset="100%" stop-color="#0E4A3D"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F4D78A"/>
+      <stop offset="100%" stop-color="#D4A24C"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#emerald)"/>
+  <!-- عارضة الميزان -->
+  <line x1="128" y1="150" x2="384" y2="150" stroke="url(#gold)" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="256" cy="150" r="22" fill="url(#gold)"/>
+  <!-- الكتاب المفتوح -->
+  <path d="M256 232 C216 208 168 208 128 220 L128 388 C168 376 216 376 256 400 C296 376 344 376 384 388 L384 220 C344 208 296 208 256 232 Z" fill="#FBF7EE"/>
+  <line x1="256" y1="232" x2="256" y2="400" stroke="#14594A" stroke-width="10"/>
+</svg>
