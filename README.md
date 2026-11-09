@@ -1,138 +1,133 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/domz-1/wazn/main/assets/branding/logo.png" alt="Wazn logo" width="140" height="140">
+<img src="assets/branding/banner.png" alt="Wazn — Make your time weigh more" width="820">
 
-<img src="https://img.shields.io/badge/Flutter-3.4+-02569B?logo=flutter&logoColor=white" alt="Flutter">
-<img src="https://img.shields.io/badge/Dart-3.4+-0175C2?logo=dart&logoColor=white" alt="Dart">
-<img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web-0E3A31" alt="Platforms">
-<img src="https://img.shields.io/badge/Language-Arabic%20RTL-E9C46A" alt="Arabic">
-<img src="https://img.shields.io/badge/Offline-First-1F6B5C" alt="Offline">
+<br/>
 
-<h1>⚖️ وزن — Wazn</h1>
+<img src="https://img.shields.io/badge/Flutter-3.4%2B-02569B?logo=flutter&logoColor=white" alt="Flutter">
+<img src="https://img.shields.io/badge/Dart-3.4%2B-0175C2?logo=dart&logoColor=white" alt="Dart">
+<img src="https://img.shields.io/badge/Platforms-Android%20%C2%B7%20iOS%20%C2%B7%20Web-0E3A31" alt="Platforms">
+<img src="https://img.shields.io/badge/Language-Arabic%20RTL-E9C46A" alt="Arabic RTL">
+<img src="https://img.shields.io/badge/Offline--First-yes-1F6B5C" alt="Offline-first">
+<img src="https://img.shields.io/badge/License-MIT-D4A24C" alt="MIT">
 
-<p><strong>اجعل وقتك يزن أكثر</strong></p>
-
-<p>تطبيق عربي يحوّل وقت التمرير إلى وردٍ وذكر.<br>
-يحظر التطبيقات المُشتِّتة بعد حدٍّ يومي، ولا يُفتح القفل إلا بإتمام ورد قراءة أو أذكار.</p>
+<p><strong>Turn doom-scrolling time into worship and remembrance.</strong><br/>
+Wazn blocks distracting apps after a daily limit — and only unlocks them when you finish a reading or adhkar session.</p>
 
 </div>
 
 ---
 
-## ✨ الفكرة
+## 🎯 Why Wazn
 
-> كل دقيقة تقرأها = ٣ دقائق تصفح. وقتك يستحق أن **يزن**.
+> Every minute you read earns you **3 minutes** of browsing. Your time should *weigh* something.
 
-بدلاً من تطبيقات الحظر الصارمة، يقدّم «وزن» مقايضة عادلة: تُعطي ورداً (قرآن، أذكار، تدبّر)، فتحصل على وقت تصفح. يعمل المصحف والأذكار والتفسير وحديث اليوم **بلا إنترنت** تماماً.
+Most screen-time apps are punitive. **Wazn** offers a fair trade: give a little worship (Quran, adhkar, reflection) → earn leisure time. The Mushaf, tafsir, adhkar, and the daily hadith all work **fully offline**.
 
----
+## ✨ Features
 
-## 🎨 الهوية البصرية
+- **📵 Smart blocking** — daily limit per app, gentle countdown, one daily snooze, a 30-second gradual block, and an emergency unlock (once/day).
+- **📖 Built-in Mushaf** — Quran with tafsir on tap (Al-Muyassar), adjustable font & theme, full-screen reading.
+- **📿 Adhkar & Tasbih** — morning/evening adhkar with a beautiful counter.
+- **🕌 Daily hadith** — curated, with source and grade shown.
+- **📊 Streaks & stats** — reading minutes, recovered time, weekly rest day that never breaks your streak.
+- **🤝 Accountability partner** — share your streak only, never your screen time.
+- **🌙 Offline-first** — everything religious works with zero network.
+- **🌍 Arabic-first** — full RTL, native Arabic typography (Aref Ruqaa · IBM Plex Sans Arabic · Amiri).
 
-| اللون       | القيمة    | الاستخدام       |
-| ----------- | --------- | --------------- |
-| زمرد الليل  | `#07241F` | خلفيات داكنة    |
-| زمرد        | `#0E3A31` | الأساسي         |
-| أخضر الواحة | `#1F6B5C` | العناصر النشطة  |
-| ذهب         | `#E9C46A` | الإجراء الرئيسي |
-| ذهب عتيق    | `#D4A24C` | التدرجات        |
-| رمل         | `#FBF7EE` | الخلفية الفاتحة |
-| رمل دافئ    | `#F1E9D8` | البطاقات        |
-| حبر         | `#10251F` | النصوص          |
+## 🎨 Brand
 
-**الخطوط:** Aref Ruqaa (الشعار) · IBM Plex Sans Arabic (الواجهة) · Amiri (المصحف والأحاديث والأذكار).
+| Token | Hex | Use |
+|---|---|---|
+| Emerald Night | `#07241F` | Dark surfaces |
+| Emerald | `#0E3A31` | Primary |
+| Oasis Green | `#1F6B5C` | Active states |
+| Gold | `#E9C46A` | Primary action |
+| Antique Gold | `#D4A24C` | Gradients |
+| Sand | `#FBF7EE` | Light background |
+| Warm Sand | `#F1E9D8` | Cards |
+| Ink | `#10251F` | Text |
 
----
+**Typography:** Aref Ruqaa (wordmark) · IBM Plex Sans Arabic (UI) · Amiri (Quran & hadith).
 
-## 📱 الشاشات (25)
+## 📱 Screens (25)
 
-| #   | الشاشة                | الملف                             |
-| --- | --------------------- | --------------------------------- |
-| ١   | البداية               | `splash_screen.dart`              |
-| ٢   | الإعداد — التطبيقات   | `onboarding_apps_screen.dart`     |
-| ٣   | الإعداد — الافتراضيات | `onboarding_defaults_screen.dart` |
-| ٤   | الرئيسية              | `home_screen.dart`                |
-| ٥   | الحظر والتأجيل        | `block_screen.dart`               |
-| ٦   | التنبيه والويدجت      | `pre_block_alert_screen.dart`     |
-| ٧   | تم فك القفل           | `unlocked_screen.dart`            |
-| ٨   | المصحف                | `worship_screen.dart`             |
-| ٩   | الأذكار               | `adhkar_screen.dart`              |
-| ١٠  | عدّاد التسبيح         | `dhikr_counter_screen.dart`       |
-| ١١  | القراءة والتفسير      | `reading_screen.dart`             |
-| ١٢  | الإحصاءات             | `stats_screen.dart`               |
-| ١٣  | الإعدادات             | `settings_screen.dart`            |
-| ١٤  | نية الفتح             | `open_intent_screen.dart`         |
-| ١٥  | الحظر التدريجي        | `gradual_block_screen.dart`       |
-| ١٦  | أحتاجه الآن           | `emergency_screen.dart`           |
-| ١٧  | التدبّر               | `reflection_screen.dart`          |
-| ١٨  | شريك المساءلة         | `accountability_screen.dart`      |
-| ١٩  | الإذن غير مفعّل       | `permission_screen.dart`          |
+| Screen | File |
+|---|---|
+| Splash | `splash_screen.dart` |
+| Onboarding · Apps & limit | `onboarding_apps_screen.dart` |
+| Onboarding · Suggested defaults | `onboarding_defaults_screen.dart` |
+| Home · next step | `home_screen.dart` |
+| Block + snooze | `block_screen.dart` |
+| Pre-block alert & widgets | `pre_block_alert_screen.dart` |
+| Unlocked | `unlocked_screen.dart` |
+| Worship · Mushaf | `worship_screen.dart` |
+| Worship · Adhkar | `adhkar_screen.dart` |
+| Dhikr counter | `dhikr_counter_screen.dart` |
+| Reading · tap an ayah | `reading_screen.dart` |
+| Reading · tafsir / themes / full-screen | `reading_screen.dart` (sheets) |
+| Open intent | `open_intent_screen.dart` |
+| Gradual block | `gradual_block_screen.dart` |
+| Emergency unlock | `emergency_screen.dart` |
+| Reflection after reading | `reflection_screen.dart` |
+| Stats + rest day | `stats_screen.dart` |
+| Settings | `settings_screen.dart` |
+| Accountability partner | `accountability_screen.dart` |
+| Permission off | `permission_screen.dart` |
 
----
-
-## 🚀 التشغيل
+## 🚀 Getting Started
 
 ```bash
-# 1. تثبيت الحزم
 flutter pub get
 
-# 2. التشغيل على أندرويد أو سطح المكتب
+# Android / desktop
 flutter run
 
-# 3. على الويب
+# Web
 flutter run -d chrome
 
-# 4. بناء APK
+# Release APK
 flutter build apk --release
 ```
 
-> **المتطلبات:** Flutter 3.4+ · Dart 3.4+
+> **Requires:** Flutter 3.4+ · Dart 3.4+
 
----
-
-## 🏗️ المعمارية
+## 🏗️ Architecture
 
 ```
 lib/
-├── main.dart              # نقطة الدخول + RTL + Provider
-├── theme/                 # الألوان والثيم والخطوط
-│   ├── wazn_colors.dart
-│   └── wazn_theme.dart
-├── models/                # النماذج (Ayah, Dhikr, Hadith…)
+├── main.dart              # entry · RTL · Provider
+├── theme/                 # colors, theme, fonts
+├── models/                # Ayah, Dhikr, Hadith, AppSettings
 ├── data/
-│   ├── app_state.dart     # الحالة المركزية (ChangeNotifier)
-│   ├── local_store.dart   # تخزين محلي (SharedPreferences)
-│   └── seed_*.dart        # بيانات مضمّنة تعمل بلا إنترنت
-├── widgets/               # مكوّنات مشتركة (زر، بطاقة، شريط سفلي…)
-└── screens/               # 20 شاشة
+│   ├── app_state.dart     # central ChangeNotifier state
+│   ├── local_store.dart   # SharedPreferences persistence
+│   └── seed_*.dart        # bundled offline data
+├── widgets/               # logo, buttons, cards, bottom nav
+└── screens/               # 20 screens
 ```
 
-**المبدأ:** كل شاشة تتحدث مع `AppState` فقط، و`AppState` يقرأ من `LocalStore` قبل أي شبكة. وحدات Kotlin/Swift الأصلية ستُضاف لاحقاً لقراءة وقت الاستخدام الحقيقي.
+Every screen talks only to `AppState`, which reads from `LocalStore` before any network. Native Kotlin/Swift modules for real usage-time reading slot in behind that interface.
 
----
+## 📦 Offline
 
-## 📦 ما يعمل بلا إنترنت
+| Works offline | Needs network |
+|---|---|
+| ✅ Quran + tafsir (bundled sample) | ⚠️ Prayer times |
+| ✅ Adhkar + tasbih | ⚠️ Audio recitation |
+| ✅ Daily hadith | |
+| ✅ Streaks, stats, quota | |
 
-- ✅ المصحف والتفسير (عيّنة مضمّنة، قابلة للتوسيع)
-- ✅ الأذكار وعدّاد التسبيح
-- ✅ حديث اليوم
-- ✅ السلسلة والإحصاءات والرصيد
-- ⚠️ مواقيت الصلاة والصوت: تحتاج شبكة (مرحلة لاحقة)
+## 🔮 Roadmap
 
----
+- [ ] Full Quran archive (spa5k/tafsir_api) in SQLite
+- [ ] Native Kotlin module (UsageStats) for real usage time
+- [ ] Native Swift module (Screen Time / FamilyControls)
+- [ ] Audio recitation with offline pre-download
+- [ ] Accountability partner backend
 
-## 🔮 الخطوة التالية
-
-- [ ] استبدال عيّنة المصحف بأرشيف كامل (spa5k/tafsir_api)
-- [ ] وحدة Kotlin (UsageStats) للقراءة الفعلية لوقت الاستخدام
-- [ ] وحدة Swift (Screen Time / FamilyControls) لآيفون
-- [ ] صوت التلاوة مع التحميل المسبق للاستماع بلا إنترنت
-- [ ] شريك المساءلة مع خادم صغير
-
----
-
-## 📄 الترخيص
+## 📄 License
 
 MIT © [Adham AbuElenin](https://github.com/domz-1)
 
-<div align="center"><sub>صُنع بعناية — اجعل وقتك يزن أكثر ⚖️</sub></div>
+<div align="center"><sub>Built with care — make your time weigh more ⚖️</sub></div>
