@@ -6,9 +6,11 @@ class AppSettings {
   final int readingMinutes;
   final int browseRatio;
   final String mushafSource;
+  final String externalQuranPackage;
+  final String externalQuranName;
   final String tafsirSource;
   final String mushafTheme;
-  final int fontScale;
+  final double fontScale;
   final String blockMode; // gentle | strict
   final String morningAdhkarTime;
   final String eveningAdhkarTime;
@@ -16,16 +18,24 @@ class AppSettings {
   final int khatmaPagesPerDay;
 
   const AppSettings({
-    this.restrictedApps = const {'instagram', 'tiktok', 'facebook', 'youtube', 'snapchat'},
+    this.restrictedApps = const {
+      'tiktok',
+      'facebook',
+      'instagram',
+      'youtube',
+      'snapchat'
+    },
     this.dailyLimitMinutes = 45,
     this.alertBeforeMinutes = 5,
     this.snoozeMinutes = 5,
     this.readingMinutes = 10,
     this.browseRatio = 3,
     this.mushafSource = 'builtin',
+    this.externalQuranPackage = 'com.quran.labs.androidquran',
+    this.externalQuranName = 'القرآن الكريم',
     this.tafsirSource = 'muyassar',
     this.mushafTheme = 'paper',
-    this.fontScale = 1,
+    this.fontScale = 1.0,
     this.blockMode = 'gentle',
     this.morningAdhkarTime = '05:30',
     this.eveningAdhkarTime = '16:30',
@@ -41,9 +51,11 @@ class AppSettings {
     int? readingMinutes,
     int? browseRatio,
     String? mushafSource,
+    String? externalQuranPackage,
+    String? externalQuranName,
     String? tafsirSource,
     String? mushafTheme,
-    int? fontScale,
+    double? fontScale,
     String? blockMode,
     String? morningAdhkarTime,
     String? eveningAdhkarTime,
@@ -58,6 +70,8 @@ class AppSettings {
       readingMinutes: readingMinutes ?? this.readingMinutes,
       browseRatio: browseRatio ?? this.browseRatio,
       mushafSource: mushafSource ?? this.mushafSource,
+      externalQuranPackage: externalQuranPackage ?? this.externalQuranPackage,
+      externalQuranName: externalQuranName ?? this.externalQuranName,
       tafsirSource: tafsirSource ?? this.tafsirSource,
       mushafTheme: mushafTheme ?? this.mushafTheme,
       fontScale: fontScale ?? this.fontScale,

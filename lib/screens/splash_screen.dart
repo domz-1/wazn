@@ -13,7 +13,10 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [WaznColors.sand, WaznColors.sandDeep]),
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [WaznColors.sand, WaznColors.sandDeep]),
         ),
         child: SafeArea(
           child: Padding(
@@ -25,11 +28,23 @@ class SplashScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 const WaznWordmark(fontSize: 64),
                 const SizedBox(height: 10),
-                const Text('اجعل وقتك يزن أكثر', style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 16, color: WaznColors.inkMuted)),
+                const Text('اجعل وقتك يزن أكثر',
+                    style: TextStyle(
+                        fontFamily: WaznFonts.ui,
+                        fontSize: 16,
+                        color: WaznColors.inkMuted)),
                 const Spacer(flex: 3),
-                EmeraldButton(label: 'ابدأ', onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const OnboardingAppsScreen()))),
+                EmeraldButton(
+                    label: 'ابدأ',
+                    onTap: () => Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (_) => const OnboardingAppsScreen()))),
                 const SizedBox(height: 12),
-                const Text('استبدل التمرير بوردٍ وذكر', style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 13, color: WaznColors.inkMuted)),
+                const Text('استبدل التمرير بوردٍ وذكر',
+                    style: TextStyle(
+                        fontFamily: WaznFonts.ui,
+                        fontSize: 13,
+                        color: WaznColors.inkMuted)),
                 const SizedBox(height: 12),
               ],
             ),

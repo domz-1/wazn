@@ -21,22 +21,51 @@ class UnlockedScreen extends StatelessWidget {
             children: [
               const Spacer(),
               Container(
-                width: 120, height: 120,
-                decoration: const BoxDecoration(shape: BoxShape.circle, gradient: LinearGradient(colors: WaznColors.goldBtnGradient)),
-                child: const Icon(Icons.check_rounded, size: 64, color: Color(0xFF1A1405)),
+                width: 120,
+                height: 120,
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient:
+                        LinearGradient(colors: WaznColors.goldBtnGradient)),
+                child: const Icon(Icons.check_rounded,
+                    size: 64, color: Color(0xFF1A1405)),
               ),
               const SizedBox(height: 22),
-              const Text('تقبّل الله منك', style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 28, fontWeight: FontWeight.w700, color: WaznColors.emerald)),
+              const Text('تقبّل الله منك',
+                  style: TextStyle(
+                      fontFamily: WaznFonts.ui,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: WaznColors.emerald)),
               const SizedBox(height: 8),
-              const Text('اكتمل وردك، وفُكّ القفل عن تطبيقاتك.', textAlign: TextAlign.center, style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 15, color: WaznColors.inkMuted)),
+              const Text('اكتمل وردك، وفُكّ القفل عن تطبيقاتك.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: WaznFonts.ui,
+                      fontSize: 15,
+                      color: WaznColors.inkMuted)),
               const SizedBox(height: 24),
               WaznCard(
                 child: Column(children: [
-                  const Text('رصيدك الجديد', style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 13, color: WaznColors.inkMuted)),
+                  const Text('رصيدك الجديد',
+                      style: TextStyle(
+                          fontFamily: WaznFonts.ui,
+                          fontSize: 13,
+                          color: WaznColors.inkMuted)),
                   const SizedBox(height: 6),
-                  Text('${state.browseLeftMinutes} دقيقة تصفح', style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 24, fontWeight: FontWeight.w700, color: WaznColors.oasis)),
+                  Text('${state.browseLeftMinutes} دقيقة تصفح',
+                      style: const TextStyle(
+                          fontFamily: WaznFonts.ui,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: WaznColors.oasis)),
                   const SizedBox(height: 4),
-                  Text('${state.settings.readingMinutes} دقائق قراءة × ${state.settings.browseRatio}', style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 12, color: WaznColors.inkMuted)),
+                  Text(
+                      '${state.settings.readingMinutes} دقائق قراءة × ${state.settings.browseRatio}',
+                      style: const TextStyle(
+                          fontFamily: WaznFonts.ui,
+                          fontSize: 12,
+                          color: WaznColors.inkMuted)),
                 ]),
               ),
               const SizedBox(height: 14),
@@ -50,11 +79,20 @@ class UnlockedScreen extends StatelessWidget {
                 ]),
               ),
               const SizedBox(height: 16),
-              Text('${state.streak} أيام متتالية — واصل', style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 14, fontWeight: FontWeight.w700, color: WaznColors.goldOld)),
+              Text('${state.streak} أيام متتالية — واصل',
+                  style: const TextStyle(
+                      fontFamily: WaznFonts.ui,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: WaznColors.goldOld)),
               const Spacer(),
-              EmeraldButton(label: 'متابعة التصفح', onTap: () => Navigator.pop(context)),
+              EmeraldButton(
+                  label: 'متابعة التصفح', onTap: () => Navigator.pop(context)),
               const SizedBox(height: 10),
-              SoftButton(label: 'أكمل القراءة', icon: Icons.menu_book_outlined, onTap: () => Navigator.pop(context)),
+              SoftButton(
+                  label: 'أكمل القراءة',
+                  icon: Icons.menu_book_outlined,
+                  onTap: () => Navigator.pop(context)),
             ],
           ),
         ),
@@ -63,10 +101,17 @@ class UnlockedScreen extends StatelessWidget {
   }
 
   Widget _row(String k, String v) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8),
-    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(k, style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 14)),
-      Text(v, style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 14, fontWeight: FontWeight.w700, color: WaznColors.oasis)),
-    ]),
-  );
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(k,
+              style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 14)),
+          Text(v,
+              style: const TextStyle(
+                  fontFamily: WaznFonts.ui,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: WaznColors.oasis)),
+        ]),
+      );
 }

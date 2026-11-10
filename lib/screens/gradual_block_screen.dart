@@ -41,21 +41,60 @@ class _GradualBlockScreenState extends State<GradualBlockScreen> {
           child: Column(children: [
             const Spacer(),
             Container(
-              width: 140, height: 140,
-              decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: WaznColors.goldOld, width: 4)),
+              width: 140,
+              height: 140,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: WaznColors.goldOld, width: 4)),
               alignment: Alignment.center,
-              child: Text('$_left ثانية', style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 24, fontWeight: FontWeight.w700, color: WaznColors.goldLight)),
+              child: Text('$_left ثانية',
+                  style: const TextStyle(
+                      fontFamily: WaznFonts.ui,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      color: WaznColors.goldLight)),
             ),
             const SizedBox(height: 24),
-            const Text('أنهِ ما بين يديك', style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 24, fontWeight: FontWeight.w700, color: WaznColors.sand)),
+            const Text('أنهِ ما بين يديك',
+                style: TextStyle(
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: WaznColors.sand)),
             const SizedBox(height: 8),
-            const Text('انتهت حصتك. سيُغلق التطبيق بهدوء بعد قليل.', textAlign: TextAlign.center, style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 14, color: Color(0xFFBFD6CE))),
+            const Text('انتهت حصتك. سيُغلق التطبيق بهدوء بعد قليل.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 14,
+                    color: Color(0xFFBFD6CE))),
             const Spacer(),
-            FilledButton(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReadingScreen())), style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(56), backgroundColor: WaznColors.gold, foregroundColor: const Color(0xFF1A1405), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))), child: const Text('ابدأ الورد الآن')),
+            FilledButton(
+                onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ReadingScreen())),
+                style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(56),
+                    backgroundColor: WaznColors.gold,
+                    foregroundColor: const Color(0xFF1A1405),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(28))),
+                child: const Text('ابدأ الورد الآن')),
             const SizedBox(height: 10),
-            OutlinedButton(onPressed: () => Navigator.pop(context), style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(52), foregroundColor: WaznColors.sand, side: BorderSide(color: WaznColors.sand.withOpacity(0.3)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))), child: const Text('أجّل ٥ د')),
+            OutlinedButton(
+                onPressed: () => Navigator.pop(context),
+                style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(52),
+                    foregroundColor: WaznColors.sand,
+                    side: BorderSide(color: WaznColors.sand.withValues(alpha: 0.3)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16))),
+                child: const Text('أجّل ٥ د')),
             const SizedBox(height: 8),
-            TextButton(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EmergencyScreen())), child: const Text('أحتاجه الآن', style: TextStyle(color: WaznColors.goldLight))),
+            TextButton(
+                onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const EmergencyScreen())),
+                child: const Text('أحتاجه الآن',
+                    style: TextStyle(color: WaznColors.goldLight))),
           ]),
         ),
       ),

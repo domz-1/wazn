@@ -32,11 +32,21 @@ class WaznBottomNav extends StatelessWidget {
               onTap: () => onTap(i),
               borderRadius: BorderRadius.circular(14),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(items[i].$1, size: 22, color: active ? WaznColors.oasis : WaznColors.inkMuted),
+                  Icon(items[i].$1,
+                      size: 22,
+                      color: active ? WaznColors.oasis : WaznColors.inkMuted),
                   const SizedBox(height: 4),
-                  Text(items[i].$2, style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 12, fontWeight: active ? FontWeight.w700 : FontWeight.w500, color: active ? WaznColors.oasis : WaznColors.inkMuted)),
+                  Text(items[i].$2,
+                      style: TextStyle(
+                          fontFamily: WaznFonts.ui,
+                          fontSize: 12,
+                          fontWeight:
+                              active ? FontWeight.w700 : FontWeight.w500,
+                          color:
+                              active ? WaznColors.oasis : WaznColors.inkMuted)),
                 ]),
               ),
             );

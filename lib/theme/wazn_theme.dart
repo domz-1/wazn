@@ -71,13 +71,20 @@ class WaznTheme {
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: const Size.fromHeight(56),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(WaznRadii.button)),
-          textStyle: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 18, fontWeight: FontWeight.w700),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(WaznRadii.button)),
+          textStyle: const TextStyle(
+              fontFamily: WaznFonts.ui,
+              fontSize: 18,
+              fontWeight: FontWeight.w700),
         ),
       ),
-      segmentedButtonTheme: SegmentedButtonThemeData(
+      segmentedButtonTheme: const SegmentedButtonThemeData(
         style: ButtonStyle(
-          textStyle: WidgetStatePropertyAll(TextStyle(fontFamily: WaznFonts.ui, fontWeight: FontWeight.w600, fontSize: 14)),
+          textStyle: WidgetStatePropertyAll(TextStyle(
+              fontFamily: WaznFonts.ui,
+              fontWeight: FontWeight.w600,
+              fontSize: 14)),
         ),
       ),
     );
@@ -86,13 +93,35 @@ class WaznTheme {
   static TextTheme _textTheme(bool isDark) {
     final c = isDark ? WaznColors.sand : WaznColors.ink;
     return TextTheme(
-      displayLarge: TextStyle(fontFamily: WaznFonts.ui, fontSize: 34, fontWeight: FontWeight.w700, color: c),
-      headlineMedium: TextStyle(fontFamily: WaznFonts.ui, fontSize: 26, fontWeight: FontWeight.w700, color: c),
-      titleLarge: TextStyle(fontFamily: WaznFonts.ui, fontSize: 20, fontWeight: FontWeight.w700, color: c),
-      titleMedium: TextStyle(fontFamily: WaznFonts.ui, fontSize: 16, fontWeight: FontWeight.w600, color: c),
-      bodyLarge: TextStyle(fontFamily: WaznFonts.ui, fontSize: 15, color: c, height: 1.6),
-      bodyMedium: TextStyle(fontFamily: WaznFonts.ui, fontSize: 14, color: c, height: 1.6),
-      labelLarge: TextStyle(fontFamily: WaznFonts.ui, fontSize: 14, fontWeight: FontWeight.w600, color: c),
+      displayLarge: TextStyle(
+          fontFamily: WaznFonts.ui,
+          fontSize: 34,
+          fontWeight: FontWeight.w700,
+          color: c),
+      headlineMedium: TextStyle(
+          fontFamily: WaznFonts.ui,
+          fontSize: 26,
+          fontWeight: FontWeight.w700,
+          color: c),
+      titleLarge: TextStyle(
+          fontFamily: WaznFonts.ui,
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          color: c),
+      titleMedium: TextStyle(
+          fontFamily: WaznFonts.ui,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: c),
+      bodyLarge: TextStyle(
+          fontFamily: WaznFonts.ui, fontSize: 15, color: c, height: 1.6),
+      bodyMedium: TextStyle(
+          fontFamily: WaznFonts.ui, fontSize: 14, color: c, height: 1.6),
+      labelLarge: TextStyle(
+          fontFamily: WaznFonts.ui,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: c),
     );
   }
 }

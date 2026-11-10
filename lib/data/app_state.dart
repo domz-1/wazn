@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../models/app_settings.dart';
 import '../models/hadith.dart';
@@ -57,21 +56,32 @@ class AppState extends ChangeNotifier {
     final j = store.settingsJson;
     if (j.isNotEmpty) {
       _settings = AppSettings(
-        restrictedApps: (j['restrictedApps'] as List?)?.cast<String>().toSet() ?? _settings.restrictedApps,
-        dailyLimitMinutes: j['dailyLimitMinutes'] ?? _settings.dailyLimitMinutes,
-        alertBeforeMinutes: j['alertBeforeMinutes'] ?? _settings.alertBeforeMinutes,
+        restrictedApps:
+            (j['restrictedApps'] as List?)?.cast<String>().toSet() ??
+                _settings.restrictedApps,
+        dailyLimitMinutes:
+            j['dailyLimitMinutes'] ?? _settings.dailyLimitMinutes,
+        alertBeforeMinutes:
+            j['alertBeforeMinutes'] ?? _settings.alertBeforeMinutes,
         snoozeMinutes: j['snoozeMinutes'] ?? _settings.snoozeMinutes,
         readingMinutes: j['readingMinutes'] ?? _settings.readingMinutes,
         browseRatio: j['browseRatio'] ?? _settings.browseRatio,
         mushafSource: j['mushafSource'] ?? _settings.mushafSource,
+        externalQuranPackage:
+            j['externalQuranPackage'] ?? _settings.externalQuranPackage,
+        externalQuranName:
+            j['externalQuranName'] ?? _settings.externalQuranName,
         tafsirSource: j['tafsirSource'] ?? _settings.tafsirSource,
         mushafTheme: j['mushafTheme'] ?? _settings.mushafTheme,
-        fontScale: j['fontScale'] ?? _settings.fontScale,
+        fontScale: (j['fontScale'] as num?)?.toDouble() ?? _settings.fontScale,
         blockMode: j['blockMode'] ?? _settings.blockMode,
-        morningAdhkarTime: j['morningAdhkarTime'] ?? _settings.morningAdhkarTime,
-        eveningAdhkarTime: j['eveningAdhkarTime'] ?? _settings.eveningAdhkarTime,
+        morningAdhkarTime:
+            j['morningAdhkarTime'] ?? _settings.morningAdhkarTime,
+        eveningAdhkarTime:
+            j['eveningAdhkarTime'] ?? _settings.eveningAdhkarTime,
         restDayEnabled: j['restDayEnabled'] ?? _settings.restDayEnabled,
-        khatmaPagesPerDay: j['khatmaPagesPerDay'] ?? _settings.khatmaPagesPerDay,
+        khatmaPagesPerDay:
+            j['khatmaPagesPerDay'] ?? _settings.khatmaPagesPerDay,
       );
     }
     _streak = store.streakDays;
@@ -93,6 +103,8 @@ class AppState extends ChangeNotifier {
       'readingMinutes': _settings.readingMinutes,
       'browseRatio': _settings.browseRatio,
       'mushafSource': _settings.mushafSource,
+      'externalQuranPackage': _settings.externalQuranPackage,
+      'externalQuranName': _settings.externalQuranName,
       'tafsirSource': _settings.tafsirSource,
       'mushafTheme': _settings.mushafTheme,
       'fontScale': _settings.fontScale,
@@ -114,6 +126,14 @@ class AppState extends ChangeNotifier {
     final next = Set<String>.from(_settings.restrictedApps);
     next.contains(id) ? next.remove(id) : next.add(id);
     updateSettings(_settings.copyWith(restrictedApps: next));
+  }
+
+  void setExternalQuranApp(String package, String name) {
+    updateSettings(_settings.copyWith(
+      mushafSource: 'external',
+      externalQuranPackage: package,
+      externalQuranName: name,
+    ));
   }
 
   void selectSurah(int i) {

@@ -29,9 +29,21 @@ class WaznColors {
   static const white = Color(0xFFFFFFFF);
 
   // تدرجات البطاقة الرئيسية
-  static const morningGradient = [Color(0xFFFFE3A3), Color(0xFFFFC27A), Color(0xFFF59E7A)];
-  static const readingGradient = [Color(0xFF0E3A31), Color(0xFF145244), Color(0xFF1F6B5C)];
-  static const eveningGradient = [Color(0xFF1A2358), Color(0xFF2D2B6E), Color(0xFF44306F)];
+  static const morningGradient = [
+    Color(0xFFFFE3A3),
+    Color(0xFFFFC27A),
+    Color(0xFFF59E7A)
+  ];
+  static const readingGradient = [
+    Color(0xFF0E3A31),
+    Color(0xFF145244),
+    Color(0xFF1F6B5C)
+  ];
+  static const eveningGradient = [
+    Color(0xFF1A2358),
+    Color(0xFF2D2B6E),
+    Color(0xFF44306F)
+  ];
 
   static const emeraldBtnGradient = [Color(0xFF1F8A70), Color(0xFF0E4A3D)];
   static const goldBtnGradient = [Color(0xFFF4D78A), Color(0xFFD4A24C)];

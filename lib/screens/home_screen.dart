@@ -18,7 +18,10 @@ class HomeScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [WaznColors.sand, WaznColors.sandDeep]),
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [WaznColors.sand, WaznColors.sandDeep]),
       ),
       child: SafeArea(
         bottom: false,
@@ -29,13 +32,14 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 16),
             _heroCard(context, state),
             const SizedBox(height: 18),
-            SectionTitle('خطة اليوم'),
+            const SectionTitle('خطة اليوم'),
             _plan(state),
             const SizedBox(height: 10),
-            SectionTitle('حديث اليوم', trailing: 'سبّح الآن', onTrailing: () {}),
+            SectionTitle('حديث اليوم',
+                trailing: 'سبّح الآن', onTrailing: () {}),
             _hadith(state.hadith),
             const SizedBox(height: 10),
-            SectionTitle('حصة التصفح اليوم'),
+            const SectionTitle('حصة التصفح اليوم'),
             _quota(context, state),
           ],
         ),
@@ -48,12 +52,18 @@ class HomeScreen extends StatelessWidget {
       children: [
         const WaznMark(size: 44),
         const SizedBox(width: 10),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const WaznWordmark(fontSize: 30),
-          const Text('السلام عليكم', style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 13, color: WaznColors.inkMuted)),
+        const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          WaznWordmark(fontSize: 30),
+          Text('السلام عليكم',
+              style: TextStyle(
+                  fontFamily: WaznFonts.ui,
+                  fontSize: 13,
+                  color: WaznColors.inkMuted)),
         ]),
         const Spacer(),
-        WaznChip(label: '${_ar(state.streak)} أيام', icon: Icons.local_fire_department_rounded),
+        WaznChip(
+            label: '${_ar(state.streak)} أيام',
+            icon: Icons.local_fire_department_rounded),
       ],
     );
   }
@@ -71,37 +81,93 @@ class HomeScreen extends StatelessWidget {
     late final VoidCallback onTap;
     switch (phase) {
       case HeroPhase.morning:
-        grad = WaznColors.morningGradient; ink = const Color(0xFF2B1608); sub = const Color(0xFF4A2A10);
-        title = 'أذكار الصباح'; subtitle = '٨ أذكار · نحو ٣ دقائق'; btn = 'ابدأ الآن'; btnInk = const Color(0xFFFFE3A3);
-        icon = Icons.wb_sunny_outlined; onTap = () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AdhkarScreen(morning: true)));
+        grad = WaznColors.morningGradient;
+        ink = const Color(0xFF2B1608);
+        sub = const Color(0xFF4A2A10);
+        title = 'أذكار الصباح';
+        subtitle = '٨ أذكار · نحو ٣ دقائق';
+        btn = 'ابدأ الآن';
+        btnInk = const Color(0xFFFFE3A3);
+        icon = Icons.wb_sunny_outlined;
+        onTap = () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => const AdhkarScreen(morning: true)));
       case HeroPhase.reading:
-        grad = WaznColors.readingGradient; ink = WaznColors.sandSoft; sub = const Color(0xFFBFD6CE);
-        title = 'وردك القرآني'; subtitle = 'متبقٍ ٤ دقائق من ١٠ · سورة البقرة'; btn = 'تابع القراءة'; btnInk = const Color(0xFF1A1405);
-        icon = Icons.menu_book_outlined; onTap = () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReadingScreen()));
+        grad = WaznColors.readingGradient;
+        ink = WaznColors.sandSoft;
+        sub = const Color(0xFFBFD6CE);
+        title = 'وردك القرآني';
+        subtitle = 'متبقٍ ٤ دقائق من ١٠ · سورة البقرة';
+        btn = 'تابع القراءة';
+        btnInk = const Color(0xFF1A1405);
+        icon = Icons.menu_book_outlined;
+        onTap = () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const ReadingScreen()));
       case HeroPhase.evening:
-        grad = WaznColors.eveningGradient; ink = const Color(0xFFF5F0FF); sub = const Color(0xFFC9C5EE);
-        title = 'أذكار المساء'; subtitle = 'تبدأ ٤:٣٠ م · ٨ أذكار'; btn = 'ابدأ الآن'; btnInk = const Color(0xFF1A2358);
-        icon = Icons.nightlight_outlined; onTap = () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AdhkarScreen(morning: false)));
+        grad = WaznColors.eveningGradient;
+        ink = const Color(0xFFF5F0FF);
+        sub = const Color(0xFFC9C5EE);
+        title = 'أذكار المساء';
+        subtitle = 'تبدأ ٤:٣٠ م · ٨ أذكار';
+        btn = 'ابدأ الآن';
+        btnInk = const Color(0xFF1A2358);
+        icon = Icons.nightlight_outlined;
+        onTap = () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => const AdhkarScreen(morning: false)));
     }
     return Container(
       padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(WaznRadii.card), gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors: grad)),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(WaznRadii.card),
+          gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: grad)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5), decoration: BoxDecoration(color: ink.withOpacity(0.12), borderRadius: BorderRadius.circular(999)), child: Text('الخطوة التالية', style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 13, fontWeight: FontWeight.w700, color: ink))),
+          Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+              decoration: BoxDecoration(
+                  color: ink.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(999)),
+              child: Text('الخطوة التالية',
+                  style: TextStyle(
+                      fontFamily: WaznFonts.ui,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: ink))),
           const Spacer(),
           Icon(icon, size: 40, color: ink),
         ]),
         const SizedBox(height: 10),
-        Text(title, style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 30, fontWeight: FontWeight.w700, color: ink, height: 1.25)),
-        Text(subtitle, style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 15, color: sub)),
+        Text(title,
+            style: TextStyle(
+                fontFamily: WaznFonts.ui,
+                fontSize: 30,
+                fontWeight: FontWeight.w700,
+                color: ink,
+                height: 1.25)),
+        Text(subtitle,
+            style:
+                TextStyle(fontFamily: WaznFonts.ui, fontSize: 15, color: sub)),
         const SizedBox(height: 14),
         SizedBox(
           height: 56,
           child: FilledButton(
             onPressed: onTap,
-            style: FilledButton.styleFrom(backgroundColor: btnInk == const Color(0xFFFFE3A3) ? const Color(0xFF2B1608) : (btnInk == const Color(0xFF1A1405) ? null : btnInk), foregroundColor: phase == HeroPhase.reading ? const Color(0xFF1A1405) : btnInk, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(WaznRadii.button))),
-            child: Text(btn, style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 18, fontWeight: FontWeight.w700)),
+            style: FilledButton.styleFrom(
+                backgroundColor: btnInk == const Color(0xFFFFE3A3)
+                    ? const Color(0xFF2B1608)
+                    : (btnInk == const Color(0xFF1A1405) ? null : btnInk),
+                foregroundColor: phase == HeroPhase.reading
+                    ? const Color(0xFF1A1405)
+                    : btnInk,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(WaznRadii.button))),
+            child: Text(btn,
+                style: const TextStyle(
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700)),
           ),
         ),
       ]),
@@ -116,18 +182,48 @@ class HomeScreen extends StatelessWidget {
     ];
     return WaznCard(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-      child: Column(children: List.generate(rows.length, (i) {
+      child: Column(
+          children: List.generate(rows.length, (i) {
         final r = rows[i];
         final active = state.phase.index == i;
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 4),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(color: active ? const Color(0xFFF6E8C3) : Colors.transparent, borderRadius: BorderRadius.circular(14)),
+          decoration: BoxDecoration(
+              color: active ? const Color(0xFFF6E8C3) : Colors.transparent,
+              borderRadius: BorderRadius.circular(14)),
           child: Row(children: [
-            Container(width: 22, height: 22, decoration: BoxDecoration(shape: BoxShape.circle, color: r.$3 ? WaznColors.oasis : (active ? WaznColors.white : Colors.transparent), border: Border.all(color: r.$3 ? Colors.transparent : (active ? WaznColors.goldOld : const Color(0xFFCFC5AE)), width: active ? 3 : 2)), child: r.$3 ? const Icon(Icons.check, size: 14, color: Colors.white) : null),
+            Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: r.$3
+                        ? WaznColors.oasis
+                        : (active ? WaznColors.white : Colors.transparent),
+                    border: Border.all(
+                        color: r.$3
+                            ? Colors.transparent
+                            : (active
+                                ? WaznColors.goldOld
+                                : const Color(0xFFCFC5AE)),
+                        width: active ? 3 : 2)),
+                child: r.$3
+                    ? const Icon(Icons.check, size: 14, color: Colors.white)
+                    : null),
             const SizedBox(width: 12),
-            Expanded(child: Text(r.$1, style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 15, fontWeight: FontWeight.w600, color: WaznColors.ink))),
-            Text(r.$2, style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 13, color: WaznColors.inkMuted)),
+            Expanded(
+                child: Text(r.$1,
+                    style: const TextStyle(
+                        fontFamily: WaznFonts.ui,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: WaznColors.ink))),
+            Text(r.$2,
+                style: const TextStyle(
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 13,
+                    color: WaznColors.inkMuted)),
           ]),
         );
       })),
@@ -138,12 +234,31 @@ class HomeScreen extends StatelessWidget {
     return WaznCard(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: WaznColors.sandWarm, borderRadius: BorderRadius.circular(999)), child: Text(h.source, style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 12, fontWeight: FontWeight.w600, color: WaznColors.inkMuted))),
+          Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                  color: WaznColors.sandWarm,
+                  borderRadius: BorderRadius.circular(999)),
+              child: Text(h.source,
+                  style: const TextStyle(
+                      fontFamily: WaznFonts.ui,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: WaznColors.inkMuted))),
           const Spacer(),
-          Text(h.grade, style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 12, color: WaznColors.oasis)),
+          Text(h.grade,
+              style: const TextStyle(
+                  fontFamily: WaznFonts.ui,
+                  fontSize: 12,
+                  color: WaznColors.oasis)),
         ]),
         const SizedBox(height: 10),
-        Text(h.text, style: const TextStyle(fontFamily: WaznFonts.quran, fontSize: 19, height: 1.9, color: WaznColors.ink)),
+        Text(h.text,
+            style: const TextStyle(
+                fontFamily: WaznFonts.quran,
+                fontSize: 19,
+                height: 1.9,
+                color: WaznColors.ink)),
       ]),
     );
   }
@@ -152,23 +267,44 @@ class HomeScreen extends StatelessWidget {
     final total = state.settings.dailyLimitMinutes * 60;
     final ratio = (state.browseLeftSec / total).clamp(0.0, 1.0);
     return WaznCard(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BlockScreen())),
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => const BlockScreen())),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          const Icon(Icons.hourglass_bottom_rounded, size: 18, color: WaznColors.goldOld),
+          const Icon(Icons.hourglass_bottom_rounded,
+              size: 18, color: WaznColors.goldOld),
           const SizedBox(width: 6),
-          Text('${_ar(state.browseLeftMinutes)} د متبقية', style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 16, fontWeight: FontWeight.w700, color: WaznColors.ink)),
+          Text('${_ar(state.browseLeftMinutes)} د متبقية',
+              style: const TextStyle(
+                  fontFamily: WaznFonts.ui,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: WaznColors.ink)),
         ]),
         const SizedBox(height: 10),
-        ClipRRect(borderRadius: BorderRadius.circular(999), child: LinearProgressIndicator(value: ratio, minHeight: 10, backgroundColor: WaznColors.sandWarm, valueColor: const AlwaysStoppedAnimation(WaznColors.oasis))),
+        ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+                value: ratio,
+                minHeight: 10,
+                backgroundColor: WaznColors.sandWarm,
+                valueColor: const AlwaysStoppedAnimation(WaznColors.oasis))),
         const SizedBox(height: 8),
-        const Text('سننبّهك قبل الحظر بـ ٥ دقائق.', style: TextStyle(fontFamily: WaznFonts.ui, fontSize: 12.5, color: WaznColors.inkMuted)),
+        const Text('سننبّهك قبل الحظر بـ ٥ دقائق.',
+            style: TextStyle(
+                fontFamily: WaznFonts.ui,
+                fontSize: 12.5,
+                color: WaznColors.inkMuted)),
       ]),
     );
   }
 
   String _ar(int n) {
     const d = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-    return n.toString().split('').map((c) => int.tryParse(c) != null ? d[int.parse(c)] : c).join();
+    return n
+        .toString()
+        .split('')
+        .map((c) => int.tryParse(c) != null ? d[int.parse(c)] : c)
+        .join();
   }
 }

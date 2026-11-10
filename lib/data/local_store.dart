@@ -16,14 +16,16 @@ class LocalStore {
   final SharedPreferences _p;
   LocalStore(this._p);
 
-  static Future<LocalStore> open() async => LocalStore(await SharedPreferences.getInstance());
+  static Future<LocalStore> open() async =>
+      LocalStore(await SharedPreferences.getInstance());
 
   Map<String, dynamic> get settingsJson {
     final s = _p.getString(_kSettings);
     return s == null ? {} : jsonDecode(s) as Map<String, dynamic>;
   }
 
-  Future<void> saveSettings(Map<String, dynamic> j) => _p.setString(_kSettings, jsonEncode(j));
+  Future<void> saveSettings(Map<String, dynamic> j) =>
+      _p.setString(_kSettings, jsonEncode(j));
 
   int get streakDays => _p.getInt(_kStreak) ?? 7;
   Future<void> setStreakDays(int v) => _p.setInt(_kStreak, v);

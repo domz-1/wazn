@@ -29,5 +29,10 @@ class Surah {
   final bool makki;
   final int ayahCount;
   final List<Ayah> ayahs;
-  const Surah({required this.number, required this.name, required this.makki, required this.ayahCount, required this.ayahs});
+  const Surah(
+      {required this.number,
+      required this.name,
+      required this.makki,
+      required this.ayahCount,
+      required this.ayahs});
 }

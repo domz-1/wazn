@@ -16,11 +16,16 @@ class EmeraldButton extends StatelessWidget {
         backgroundColor: WaznColors.emerald,
         foregroundColor: WaznColors.sand,
         minimumSize: const Size.fromHeight(56),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(WaznRadii.button)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(WaznRadii.button)),
       ),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         if (icon != null) ...[Icon(icon, size: 20), const SizedBox(width: 8)],
-        Text(label, style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 18, fontWeight: FontWeight.w700)),
+        Text(label,
+            style: const TextStyle(
+                fontFamily: WaznFonts.ui,
+                fontSize: 18,
+                fontWeight: FontWeight.w700)),
       ]),
     );
   }
@@ -46,11 +51,16 @@ class GoldButton extends StatelessWidget {
           shadowColor: Colors.transparent,
           foregroundColor: const Color(0xFF1A1405),
           minimumSize: const Size.fromHeight(56),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(WaznRadii.button)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(WaznRadii.button)),
         ),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           if (icon != null) ...[Icon(icon, size: 20), const SizedBox(width: 8)],
-          Text(label, style: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 18, fontWeight: FontWeight.w700)),
+          Text(label,
+              style: const TextStyle(
+                  fontFamily: WaznFonts.ui,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700)),
         ]),
       ),
     );
@@ -73,8 +83,12 @@ class SoftButton extends StatelessWidget {
         foregroundColor: WaznColors.emerald,
         minimumSize: const Size.fromHeight(52),
         side: const BorderSide(color: WaznColors.sandLine),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(WaznRadii.button)),
-        textStyle: const TextStyle(fontFamily: WaznFonts.ui, fontSize: 15, fontWeight: FontWeight.w600),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(WaznRadii.button)),
+        textStyle: const TextStyle(
+            fontFamily: WaznFonts.ui,
+            fontSize: 15,
+            fontWeight: FontWeight.w600),
       ),
     );
   }

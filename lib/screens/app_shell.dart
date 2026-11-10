@@ -13,13 +13,19 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _index = 0;
-  late final List<Widget> _pages = const [HomeScreen(), WorshipScreen(), StatsScreen(), SettingsScreen()];
+  late final List<Widget> _pages = const [
+    HomeScreen(),
+    WorshipScreen(),
+    StatsScreen(),
+    SettingsScreen()
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(index: _index, children: _pages),
-      bottomNavigationBar: WaznBottomNav(index: _index, onTap: (i) => setState(() => _index = i)),
+      bottomNavigationBar: WaznBottomNav(
+          index: _index, onTap: (i) => setState(() => _index = i)),
     );
   }
 }

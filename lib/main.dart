@@ -33,7 +33,8 @@ class WaznApp extends StatelessWidget {
         theme: WaznTheme.light(),
         darkTheme: WaznTheme.dark(),
         themeMode: ThemeMode.light,
-        builder: (context, child) => Directionality(textDirection: TextDirection.rtl, child: child!),
+        builder: (context, child) =>
+            Directionality(textDirection: TextDirection.rtl, child: child!),
         home: const SplashScreen(),
       ),
     );
