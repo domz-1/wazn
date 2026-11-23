@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../data/app_state.dart';
 import '../theme/wazn_colors.dart';
 import '../theme/wazn_theme.dart';
 import '../widgets/wazn_buttons.dart';
@@ -33,104 +35,148 @@ class _ReflectionScreenState extends State<ReflectionScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-                color: WaznColors.sandWarm,
-                borderRadius: BorderRadius.circular(16)),
+              color: WaznColors.sandWarm,
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('أتممت وردك · ١٠ دقائق',
-                      style: TextStyle(
-                          fontFamily: WaznFonts.ui,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: WaznColors.oasis)),
-                  SizedBox(height: 8),
-                  Text('ماذا وقفتَ عنده؟',
-                      style: TextStyle(
-                          fontFamily: WaznFonts.ui,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: WaznColors.ink)),
-                  SizedBox(height: 4),
-                  Text('لحظة تدبّر قصيرة تجعل القراءة تبقى معك.',
-                      style: TextStyle(
-                          fontFamily: WaznFonts.ui,
-                          fontSize: 13,
-                          color: WaznColors.inkMuted)),
-                ]),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'أتممت وردك · ١٠ دقائق',
+                  style: TextStyle(
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: WaznColors.oasis,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'ماذا وقفتَ عنده؟',
+                  style: TextStyle(
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: WaznColors.ink,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'لحظة تدبّر قصيرة تجعل القراءة تبقى معك.',
+                  style: TextStyle(
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 13,
+                    color: WaznColors.inkMuted,
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
           WaznCard(
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text('اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontFamily: WaznFonts.quran,
-                          fontSize: 24,
-                          height: 2.0,
-                          color: WaznColors.ink)),
-                  const SizedBox(height: 6),
-                  const Text('سورة الفاتحة · الآية ٦',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontFamily: WaznFonts.ui,
-                          fontSize: 12,
-                          color: WaznColors.inkMuted)),
-                  const Divider(height: 28),
-                  const Text('ما الذي لامسك فيها؟',
-                      style: TextStyle(
-                          fontFamily: WaznFonts.ui,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 10),
-                  Wrap(
-                      spacing: 8,
-                      children: _tags
-                          .map((t) => ChoiceChip(
-                              label: Text(t),
-                              selected: _selected == t,
-                              onSelected: (_) => setState(() => _selected = t)))
-                          .toList()),
-                  const SizedBox(height: 14),
-                  TextField(
-                      controller: _controller,
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                          hintText: 'ملاحظتك (اختيارية)',
-                          filled: true,
-                          fillColor: WaznColors.sand,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(14),
-                              borderSide: const BorderSide(
-                                  color: WaznColors.sandLine)))),
-                ]),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: WaznFonts.quran,
+                    fontSize: 24,
+                    height: 2.0,
+                    color: WaznColors.ink,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'سورة الفاتحة · الآية ٦، آية للتدبّر',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 12,
+                    color: WaznColors.inkMuted,
+                  ),
+                ),
+                const Divider(height: 28),
+                const Text(
+                  'ما الذي لامسك فيها؟',
+                  style: TextStyle(
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  children: _tags
+                      .map(
+                        (t) => ChoiceChip(
+                          label: Text(t),
+                          selected: _selected == t,
+                          onSelected: (_) => setState(() => _selected = t),
+                        ),
+                      )
+                      .toList(),
+                ),
+                const SizedBox(height: 14),
+                TextField(
+                  controller: _controller,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: 'ملاحظتك (اختيارية)',
+                    filled: true,
+                    fillColor: WaznColors.sand,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: const BorderSide(color: WaznColors.sandLine),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 14),
           OutlinedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.mic_none_rounded),
-              label: const Text('ملاحظة صوتية'),
-              style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                  foregroundColor: WaznColors.emerald)),
+            onPressed: null,
+            icon: const Icon(Icons.mic_none_rounded),
+            label: const Text('الملاحظة الصوتية غير متاحة بعد'),
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              foregroundColor: WaznColors.emerald,
+            ),
+          ),
           const SizedBox(height: 16),
           EmeraldButton(
-              label: 'احفظ وأكمل',
-              onTap: () => Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const UnlockedScreen()),
-                  (route) => route.isFirst)),
+            label: 'احفظ وأكمل',
+            onTap: () {
+              context.read<AppState>().saveReflection(
+                _controller.text,
+                _selected ?? '',
+              );
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const UnlockedScreen()),
+                (route) => route.isFirst,
+              );
+            },
+          ),
           const SizedBox(height: 8),
           TextButton(
-              onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const UnlockedScreen()),
-                  (route) => route.isFirst),
-              child: const Text('تخطَّ',
-                  style: TextStyle(
-                      fontFamily: WaznFonts.ui, color: WaznColors.inkMuted))),
+            onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const UnlockedScreen()),
+              (route) => route.isFirst,
+            ),
+            child: const Text(
+              'تخطَّ',
+              style: TextStyle(
+                fontFamily: WaznFonts.ui,
+                color: WaznColors.inkMuted,
+              ),
+            ),
+          ),
         ],
       ),
     );

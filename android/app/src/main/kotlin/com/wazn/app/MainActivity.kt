@@ -28,6 +28,33 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
+                "resumeProtection" -> {
+                    getSharedPreferences("wazn.protection", Context.MODE_PRIVATE).edit().putBoolean("userStopped", false).apply()
+                    result.success(true)
+                }
+                "configureProtection" -> {
+                    val prefs = getSharedPreferences("wazn.protection", Context.MODE_PRIVATE)
+                    val requested = call.argument<List<String>>("packages") ?: emptyList()
+                    val home = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+                    val launcher = packageManager.resolveActivity(home, 0)?.activityInfo?.packageName
+                    val dialer = if (Build.VERSION.SDK_INT >= 23) (getSystemService(Context.TELECOM_SERVICE) as android.telecom.TelecomManager).defaultDialerPackage else null
+                    val packages = requested.filter { it != packageName && it != launcher && it != dialer && it != "com.android.settings" && it != "com.android.systemui" }
+                    val daily = call.argument<Number>("dailySeconds")?.toLong() ?: 2700L
+                    val budget = call.argument<Number>("budgetSeconds")?.toLong() ?: 0L
+                    val enabled = call.argument<Boolean>("enabled") == true && !prefs.getBoolean("userStopped", false)
+                    prefs.edit().putStringSet("packages", packages.toSet()).putLong("budgetSeconds", budget)
+                        .putBoolean("enabled", enabled).putLong("dailySeconds", daily).apply()
+                    val intent = Intent(this, ProtectionService::class.java)
+                    if (enabled && checkUsageStatsPermission() && Settings.canDrawOverlays(this) && !ProtectionService.running) {
+                        try {
+                            if (Build.VERSION.SDK_INT >= 26) startForegroundService(intent) else startService(intent)
+                        } catch (_: Exception) { /* UI reports running=false; no false permission status. */ }
+                    } else if (!enabled) stopService(intent)
+                    val date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+                    val used = if (ProtectionService.running) ProtectionService.usedSeconds else if (prefs.getString("date", "") == date) prefs.getLong("usedMillis", 0) / 1000 else 0L
+                    result.success(mapOf("usedSeconds" to used, "running" to ProtectionService.running))
+                }
+
                 "getInstalledApps" -> {
                     executor.execute {
                         try {

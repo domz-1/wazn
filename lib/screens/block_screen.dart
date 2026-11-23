@@ -24,14 +24,19 @@ class BlockScreen extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
-              const Row(children: [
-                WaznMark(size: 36),
-                SizedBox(width: 8),
-                WaznWordmark(fontSize: 24, color: WaznColors.sand),
-              ]),
+              const Row(
+                children: [
+                  WaznMark(size: 36),
+                  SizedBox(width: 8),
+                  WaznWordmark(fontSize: 24, color: WaznColors.sand),
+                ],
+              ),
               const Spacer(),
-              const Icon(Icons.hourglass_disabled_rounded,
-                  size: 64, color: WaznColors.goldOld),
+              const Icon(
+                Icons.hourglass_disabled_rounded,
+                size: 64,
+                color: WaznColors.goldOld,
+              ),
               const SizedBox(height: 16),
               const Text(
                 'انتهت حصتك الترفيهية',
@@ -49,9 +54,10 @@ class BlockScreen extends StatelessWidget {
                 'حان وقت وردك القرآني',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: WaznFonts.ui,
-                    fontSize: 15,
-                    color: Color(0xFFBFD6CE)),
+                  fontFamily: WaznFonts.ui,
+                  fontSize: 15,
+                  color: Color(0xFFBFD6CE),
+                ),
               ),
               const SizedBox(height: 24),
               Container(
@@ -60,14 +66,16 @@ class BlockScreen extends StatelessWidget {
                   color: WaznColors.sand.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                      color: WaznColors.sand.withValues(alpha: 0.12)),
+                    color: WaznColors.sand.withValues(alpha: 0.12),
+                  ),
                 ),
                 child: Column(
-                  children: (restricted.isEmpty
-                          ? ['tiktok', 'facebook', 'instagram']
-                          : restricted.take(4))
-                      .map((id) => _buildAppRow(id, state))
-                      .toList(),
+                  children:
+                      (restricted.isEmpty
+                              ? ['tiktok', 'facebook', 'instagram']
+                              : restricted.take(4))
+                          .map((id) => _buildAppRow(id, state))
+                          .toList(),
                 ),
               ),
               const Spacer(),
@@ -75,18 +83,20 @@ class BlockScreen extends StatelessWidget {
                 'اقرأ ${state.settings.readingMinutes} دقائق تفتح لك ${state.settings.readingMinutes * state.settings.browseRatio} دقيقة تصفح',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                    fontFamily: WaznFonts.ui,
-                    fontSize: 14,
-                    color: WaznColors.sandSoft),
+                  fontFamily: WaznFonts.ui,
+                  fontSize: 14,
+                  color: WaznColors.sandSoft,
+                ),
               ),
               const SizedBox(height: 4),
               const Text(
                 'كل دقيقة قراءة = ٣ دقائق تصفح',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: WaznFonts.ui,
-                    fontSize: 12.5,
-                    color: Color(0xFF8FB0A6)),
+                  fontFamily: WaznFonts.ui,
+                  fontSize: 12.5,
+                  color: Color(0xFF8FB0A6),
+                ),
               ),
               const SizedBox(height: 16),
               FilledButton(
@@ -98,33 +108,45 @@ class BlockScreen extends StatelessWidget {
                   foregroundColor: const Color(0xFF1A1405),
                   minimumSize: const Size.fromHeight(56),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28)),
+                    borderRadius: BorderRadius.circular(28),
+                  ),
                 ),
                 child: const Text(
                   'ابدأ الورد لفك القفل',
                   style: TextStyle(
-                      fontFamily: WaznFonts.ui,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700),
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
-              Row(children: [
-                Expanded(
-                  child: TextButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.headphones_outlined,
-                        size: 18, color: WaznColors.sandSoft),
-                    label: const Text(
-                      'استمع بدلاً من القراءة',
-                      style: TextStyle(
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const ReadingScreen(),
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.headphones_outlined,
+                        size: 18,
+                        color: WaznColors.sandSoft,
+                      ),
+                      label: const Text(
+                        'استمع بدلاً من القراءة',
+                        style: TextStyle(
                           fontFamily: WaznFonts.ui,
                           fontSize: 13,
-                          color: WaznColors.sandSoft),
+                          color: WaznColors.sandSoft,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ]),
+                ],
+              ),
               const SizedBox(height: 4),
               TextButton(
                 onPressed: state.snoozeUsed
@@ -154,9 +176,10 @@ class BlockScreen extends StatelessWidget {
                 child: const Text(
                   'أحتاجه الآن',
                   style: TextStyle(
-                      fontFamily: WaznFonts.ui,
-                      fontSize: 13,
-                      color: WaznColors.sandSoft),
+                    fontFamily: WaznFonts.ui,
+                    fontSize: 13,
+                    color: WaznColors.sandSoft,
+                  ),
                 ),
               ),
             ],
@@ -169,11 +192,7 @@ class BlockScreen extends StatelessWidget {
   Widget _buildAppRow(String id, AppState state) {
     final def = SelectableApp.defaultDistractingApps.firstWhere(
       (d) => d.id == id || d.packageName == id,
-      orElse: () => SelectableApp(
-        id: id,
-        name: id,
-        packageName: id,
-      ),
+      orElse: () => SelectableApp(id: id, name: id, packageName: id),
     );
 
     return Padding(

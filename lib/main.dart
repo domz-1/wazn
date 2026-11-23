@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'data/app_state.dart';
 import 'data/local_store.dart';
 import 'screens/splash_screen.dart';
+import 'screens/app_shell.dart';
 import 'theme/wazn_theme.dart';
 
 Future<void> main() async {
@@ -35,7 +36,7 @@ class WaznApp extends StatelessWidget {
         themeMode: ThemeMode.light,
         builder: (context, child) =>
             Directionality(textDirection: TextDirection.rtl, child: child!),
-        home: const SplashScreen(),
+        home: state.onboardingDone ? const AppShell() : const SplashScreen(),
       ),
     );
   }

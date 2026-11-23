@@ -7,7 +7,9 @@ import UIKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+    guard let controller = window?.rootViewController as? FlutterViewController else {
+      return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
     let nativeChannel = FlutterMethodChannel(name: "com.wazn.app/native", binaryMessenger: controller.binaryMessenger)
 
     nativeChannel.setMethodCallHandler({
@@ -50,9 +52,9 @@ import UIKit
       } else if call.method == "getInstalledApps" {
         result([])
       } else if call.method == "hasUsagePermission" {
-        result(true)
+        result(false)
       } else if call.method == "hasOverlayPermission" {
-        result(true)
+        result(false)
       } else {
         result(FlutterMethodNotImplemented)
       }

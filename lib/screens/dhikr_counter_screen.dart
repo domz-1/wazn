@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../data/app_state.dart';
 import '../models/dhikr.dart';
 import '../theme/wazn_colors.dart';
 import '../theme/wazn_theme.dart';
@@ -6,15 +8,18 @@ import '../theme/wazn_theme.dart';
 class DhikrCounterScreen extends StatefulWidget {
   final Dhikr dhikr;
   final AdhkarSession session;
-  const DhikrCounterScreen(
-      {super.key, required this.dhikr, required this.session});
+  const DhikrCounterScreen({
+    super.key,
+    required this.dhikr,
+    required this.session,
+  });
   @override
   State<DhikrCounterScreen> createState() => _DhikrCounterScreenState();
 }
 
 class _DhikrCounterScreenState extends State<DhikrCounterScreen> {
   int _count = 0;
-  final int _target = 33;
+  int get _target => widget.dhikr.count;
 
   @override
   Widget build(BuildContext context) {
@@ -23,22 +28,26 @@ class _DhikrCounterScreenState extends State<DhikrCounterScreen> {
     return Scaffold(
       backgroundColor: WaznColors.emerald,
       appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          foregroundColor: WaznColors.sand,
-          title: Text(widget.session.title)),
+        backgroundColor: Colors.transparent,
+        foregroundColor: WaznColors.sand,
+        title: Text(widget.session.title),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
               const Spacer(),
-              Text(widget.dhikr.text,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontFamily: WaznFonts.quran,
-                      fontSize: 26,
-                      height: 2.0,
-                      color: WaznColors.sandSoft)),
+              Text(
+                widget.dhikr.text,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontFamily: WaznFonts.quran,
+                  fontSize: 26,
+                  height: 2.0,
+                  color: WaznColors.sandSoft,
+                ),
+              ),
               const SizedBox(height: 36),
               GestureDetector(
                 onTap: () =>
@@ -46,72 +55,114 @@ class _DhikrCounterScreenState extends State<DhikrCounterScreen> {
                 child: SizedBox(
                   width: 220,
                   height: 220,
-                  child: Stack(alignment: Alignment.center, children: [
-                    SizedBox(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
                         width: 220,
                         height: 220,
                         child: CircularProgressIndicator(
-                            value: progress,
-                            strokeWidth: 10,
-                            backgroundColor: WaznColors.sand.withValues(alpha: 0.15),
-                            valueColor: const AlwaysStoppedAnimation(
-                                WaznColors.goldLight))),
-                    Container(
-                      width: 180,
-                      height: 180,
-                      decoration: const BoxDecoration(
+                          value: progress,
+                          strokeWidth: 10,
+                          backgroundColor: WaznColors.sand.withValues(
+                            alpha: 0.15,
+                          ),
+                          valueColor: const AlwaysStoppedAnimation(
+                            WaznColors.goldLight,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 180,
+                        height: 180,
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
-                              colors: WaznColors.goldBtnGradient)),
-                      alignment: Alignment.center,
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        Text(_ar(_count),
-                            style: const TextStyle(
+                            colors: WaznColors.goldBtnGradient,
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _ar(_count),
+                              style: const TextStyle(
                                 fontFamily: WaznFonts.ui,
                                 fontSize: 56,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF1A1405))),
-                        Text('من ${_ar(_target)}',
-                            style: const TextStyle(
+                                color: Color(0xFF1A1405),
+                              ),
+                            ),
+                            Text(
+                              'من ${_ar(_target)}',
+                              style: const TextStyle(
                                 fontFamily: WaznFonts.ui,
                                 fontSize: 13,
-                                color: Color(0xFF4A3A10))),
-                      ]),
-                    ),
-                  ]),
+                                color: Color(0xFF4A3A10),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 28),
-              Text(done ? 'تقبّل الله منك' : 'اضغط على الدائرة للتسبيح',
-                  style: const TextStyle(
-                      fontFamily: WaznFonts.ui,
-                      fontSize: 14,
-                      color: WaznColors.sandSoft)),
+              Text(
+                done ? 'تقبّل الله منك' : 'اضغط على الدائرة للتسبيح',
+                style: const TextStyle(
+                  fontFamily: WaznFonts.ui,
+                  fontSize: 14,
+                  color: WaznColors.sandSoft,
+                ),
+              ),
               const Spacer(),
-              Row(children: [
-                Expanded(
+              Row(
+                children: [
+                  Expanded(
                     child: OutlinedButton(
-                        onPressed: () => setState(() => _count = 0),
-                        style: OutlinedButton.styleFrom(
-                            foregroundColor: WaznColors.sand,
-                            side: BorderSide(
-                                color: WaznColors.sand.withValues(alpha: 0.3)),
-                            minimumSize: const Size.fromHeight(52),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16))),
-                        child: const Text('تصفير'))),
-                const SizedBox(width: 12),
-                Expanded(
+                      onPressed: () => setState(() => _count = 0),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: WaznColors.sand,
+                        side: BorderSide(
+                          color: WaznColors.sand.withValues(alpha: 0.3),
+                        ),
+                        minimumSize: const Size.fromHeight(52),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: const Text('تصفير'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
                     child: FilledButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: FilledButton.styleFrom(
-                            backgroundColor: WaznColors.gold,
-                            foregroundColor: const Color(0xFF1A1405),
-                            minimumSize: const Size.fromHeight(52),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16))),
-                        child: const Text('الذكر التالي'))),
-              ]),
+                      onPressed: !done
+                          ? null
+                          : () {
+                              context.read<AppState>().completeDhikr(
+                                widget.session.title == 'أذكار الصباح',
+                                widget.session.items.indexOf(widget.dhikr),
+                                widget.session.items.length,
+                              );
+                              Navigator.pop(context);
+                            },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: WaznColors.gold,
+                        foregroundColor: const Color(0xFF1A1405),
+                        minimumSize: const Size.fromHeight(52),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: const Text('الذكر التالي'),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'package:just_audio/just_audio.dart';
+import 'package:quran/quran.dart' as quran;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/app_state.dart';
@@ -16,16 +19,45 @@ class ReadingScreen extends StatefulWidget {
   State<ReadingScreen> createState() => _ReadingScreenState();
 }
 
-class _ReadingScreenState extends State<ReadingScreen> {
+class _ReadingScreenState extends State<ReadingScreen>
+    with WidgetsBindingObserver {
+  Timer? _timer;
+  final AudioPlayer _audio = AudioPlayer();
+  bool _audioBusy = false;
+  bool _active = true;
+  bool _claimed = false;
   int? _selected;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted &&
+          _active &&
+          !_claimed &&
+          ModalRoute.of(context)?.isCurrent == true) {
+        context.read<AppState>().addReadingSecond();
+      }
+    });
     if (widget.surahIndex != null) {
       WidgetsBinding.instance.addPostFrameCallback(
-          (_) => context.read<AppState>().selectSurah(widget.surahIndex!));
+        (_) => context.read<AppState>().selectSurah(widget.surahIndex!),
+      );
     }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _active = state == AppLifecycleState.resumed;
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    unawaited(_audio.dispose());
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -34,8 +66,14 @@ class _ReadingScreenState extends State<ReadingScreen> {
     final surah = state.currentSurah;
     final isExternal = state.settings.mushafSource == 'external';
 
+    final night = state.settings.mushafTheme == 'night';
+    final paper = state.settings.mushafTheme == 'dark' || night
+        ? const Color(0xFF1B302B)
+        : state.settings.mushafTheme == 'sepia'
+        ? const Color(0xFFEADCC1)
+        : WaznColors.sand;
     return Scaffold(
-      backgroundColor: WaznColors.sand,
+      backgroundColor: paper,
       appBar: AppBar(
         title: Text('سورة ${surah.name}'),
         actions: [
@@ -110,8 +148,9 @@ class _ReadingScreenState extends State<ReadingScreen> {
                     ),
                   ),
                   FilledButton.icon(
-                    onPressed: () => NativeAppService.instance
-                        .launchApp(state.settings.externalQuranPackage),
+                    onPressed: () => NativeAppService.instance.launchApp(
+                      state.settings.externalQuranPackage,
+                    ),
                     icon: const Icon(Icons.open_in_new_rounded, size: 16),
                     label: const Text('افتح التطبيق'),
                     style: FilledButton.styleFrom(
@@ -136,7 +175,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
                 border: Border.all(color: WaznColors.sandLine),
               ),
               child: Text(
-                '${surah.makki ? 'مكية' : 'مدنية'} · ${_ar(surah.ayahCount)} آيات · الجزء ١',
+                '${surah.makki ? 'مكية' : 'مدنية'} · ${_ar(surah.ayahCount)} آيات',
                 style: const TextStyle(
                   fontFamily: WaznFonts.ui,
                   fontSize: 12,
@@ -149,7 +188,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
           ...surah.ayahs.map((a) => _ayahTile(a, state)),
           const SizedBox(height: 20),
           Text(
-            'اضغط على أي آية لتفسيرها أو الاستماع إليها',
+            'اضغط على الآية للتفسير، ثم زر الاستماع. الصوت يحتاج إنترنت.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: WaznFonts.ui,
@@ -177,13 +216,14 @@ class _ReadingScreenState extends State<ReadingScreen> {
                 child: FilledButton.icon(
                   onPressed: () => _complete(state),
                   icon: const Icon(Icons.check_circle_outline, size: 18),
-                  label: const Text('أتممت الورد'),
+                  label: Text('إتمام (${state.readingSeconds ~/ 60} د)'),
                   style: FilledButton.styleFrom(
                     backgroundColor: WaznColors.emerald,
                     foregroundColor: WaznColors.sand,
                     minimumSize: const Size.fromHeight(52),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
               ),
@@ -204,14 +244,16 @@ class _ReadingScreenState extends State<ReadingScreen> {
   }
 
   ButtonStyle _navStyle() => OutlinedButton.styleFrom(
-        foregroundColor: WaznColors.emerald,
-        minimumSize: const Size.fromHeight(52),
-        side: const BorderSide(color: WaznColors.sandLine),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      );
+    foregroundColor: WaznColors.emerald,
+    minimumSize: const Size.fromHeight(52),
+    side: const BorderSide(color: WaznColors.sandLine),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+  );
 
   Widget _ayahTile(Ayah a, AppState state) {
     final sel = _selected == a.number;
+    final night = state.settings.mushafTheme == 'night';
+    final ink = night ? WaznColors.sand : WaznColors.ink;
     return InkWell(
       onTap: () => setState(() => _selected = sel ? null : a.number),
       borderRadius: BorderRadius.circular(16),
@@ -220,10 +262,17 @@ class _ReadingScreenState extends State<ReadingScreen> {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: sel ? WaznColors.sandWarm : WaznColors.white,
+          color: night
+              ? const Color(0xFF24443B)
+              : state.settings.mushafTheme == 'sepia'
+              ? const Color(0xFFF1E3C8)
+              : sel
+              ? WaznColors.sandWarm
+              : WaznColors.white,
           borderRadius: BorderRadius.circular(16),
-          border:
-              Border.all(color: sel ? WaznColors.goldOld : WaznColors.sandLine),
+          border: Border.all(
+            color: sel ? WaznColors.goldOld : WaznColors.sandLine,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -235,7 +284,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
                 fontFamily: WaznFonts.quran,
                 fontSize: 24 * state.settings.fontScale,
                 height: 2.0,
-                color: WaznColors.ink,
+                color: ink,
               ),
             ),
             if (sel) ...[
@@ -267,12 +316,45 @@ class _ReadingScreenState extends State<ReadingScreen> {
               const SizedBox(height: 8),
               Text(
                 a.tafsirFor(state.settings.tafsirSource),
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: WaznFonts.ui,
                   fontSize: 14.5,
                   height: 1.9,
-                  color: WaznColors.ink,
+                  color: ink,
                 ),
+              ),
+              TextButton.icon(
+                onPressed: _audioBusy
+                    ? null
+                    : () async {
+                        setState(() => _audioBusy = true);
+                        try {
+                          await _audio.setUrl(
+                            quran.getAudioURLByVerse(
+                              state.currentSurah.number,
+                              a.number,
+                            ),
+                          );
+                          if (mounted) unawaited(_audio.play());
+                        } catch (_) {
+                          if (mounted)
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'تعذر تشغيل التلاوة. تحقق من الإنترنت.',
+                                ),
+                              ),
+                            );
+                        } finally {
+                          if (mounted) setState(() => _audioBusy = false);
+                        }
+                      },
+                icon: const Icon(Icons.play_arrow),
+                label: const Text('استمع للمشاري العفاسي، عبر الإنترنت'),
+              ),
+              TextButton(
+                onPressed: () => _audio.stop(),
+                child: const Text('إيقاف التلاوة'),
               ),
             ],
           ],
@@ -282,10 +364,10 @@ class _ReadingScreenState extends State<ReadingScreen> {
   }
 
   String _tafsirLabel(String s) => switch (s) {
-        'ibn_kathir' => 'ابن كثير',
-        'saadi' => 'السعدي',
-        _ => 'التفسير الميسر'
-      };
+    'ibn_kathir' => 'ابن كثير',
+    'saadi' => 'السعدي',
+    _ => 'التفسير الميسر',
+  };
 
   void _nextSurah(AppState state) {
     if (state.surahs.isEmpty) return;
@@ -301,9 +383,21 @@ class _ReadingScreenState extends State<ReadingScreen> {
   }
 
   void _complete(AppState state) {
-    state.completeReading(state.settings.readingMinutes);
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => const ReflectionScreen()));
+    if (_claimed) return;
+    if (!state.completeReading(state.settings.readingMinutes)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'أكمل مدة الورد داخل شاشة القراءة أولاً. لا يمكن التحقق من القراءة نفسها.',
+          ),
+        ),
+      );
+      return;
+    }
+    _claimed = true;
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const ReflectionScreen()));
   }
 
   void _showFontSheet(BuildContext context, AppState state) {
@@ -330,9 +424,10 @@ class _ReadingScreenState extends State<ReadingScreen> {
             const SizedBox(height: 14),
             Row(
               children: [
-                const Text('أ',
-                    style:
-                        TextStyle(fontFamily: WaznFonts.quran, fontSize: 16)),
+                const Text(
+                  'أ',
+                  style: TextStyle(fontFamily: WaznFonts.quran, fontSize: 16),
+                ),
                 Expanded(
                   child: Slider(
                     value: state.settings.fontScale,
@@ -342,13 +437,15 @@ class _ReadingScreenState extends State<ReadingScreen> {
                     activeColor: WaznColors.oasis,
                     onChanged: (v) {
                       state.updateSettings(
-                          state.settings.copyWith(fontScale: v));
+                        state.settings.copyWith(fontScale: v),
+                      );
                     },
                   ),
                 ),
-                const Text('أ',
-                    style:
-                        TextStyle(fontFamily: WaznFonts.quran, fontSize: 28)),
+                const Text(
+                  'أ',
+                  style: TextStyle(fontFamily: WaznFonts.quran, fontSize: 28),
+                ),
               ],
             ),
           ],
@@ -382,18 +479,21 @@ class _ReadingScreenState extends State<ReadingScreen> {
             const SizedBox(height: 14),
             Row(
               children: themes
-                  .map((t) => Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: ChoiceChip(
-                          label: Text(t.$2),
-                          selected: state.settings.mushafTheme == t.$1,
-                          onSelected: (_) {
-                            state.updateSettings(
-                                state.settings.copyWith(mushafTheme: t.$1));
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ))
+                  .map(
+                    (t) => Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: ChoiceChip(
+                        label: Text(t.$2),
+                        selected: state.settings.mushafTheme == t.$1,
+                        onSelected: (_) {
+                          state.updateSettings(
+                            state.settings.copyWith(mushafTheme: t.$1),
+                          );
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
           ],

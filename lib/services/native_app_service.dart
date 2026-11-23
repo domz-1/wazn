@@ -1,4 +1,3 @@
-import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import '../models/selectable_app.dart';
@@ -9,11 +8,46 @@ class NativeAppService {
 
   NativeAppService._();
 
+  int _dailySeconds = 2700;
+  void setDailySeconds(int value) {
+    _dailySeconds = value;
+  }
+
+  bool get supportsBlocking =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+
+  Future<Map<String, dynamic>> configureProtection(
+    List<String> packages,
+    int budgetSeconds,
+    bool enabled,
+  ) async {
+    if (!supportsBlocking) return {};
+    try {
+      final result = await _channel
+          .invokeMapMethod<String, dynamic>('configureProtection', {
+            'packages': packages,
+            'budgetSeconds': budgetSeconds,
+            'dailySeconds': _dailySeconds,
+            'enabled': enabled,
+          });
+      return result ?? {};
+    } on PlatformException {
+      return {};
+    } on MissingPluginException {
+      return {};
+    }
+  }
+
+  Future<void> resumeProtection() async {
+    if (supportsBlocking) await _channel.invokeMethod('resumeProtection');
+  }
+
   List<SelectableApp>? _cachedInstalledApps;
 
   /// جلب التطبيقات المثبتة على الجهاز مع أيقوناتها الحقيقية
-  Future<List<SelectableApp>> getInstalledApps(
-      {bool forceRefresh = false}) async {
+  Future<List<SelectableApp>> getInstalledApps({
+    bool forceRefresh = false,
+  }) async {
     if (_cachedInstalledApps != null && !forceRefresh) {
       return _cachedInstalledApps!;
     }
@@ -21,10 +55,11 @@ class NativeAppService {
     final List<SelectableApp> deviceApps = [];
 
     // على أندرويد نحاول القراءة المباشرة عبر Platform Channel
-    if (!kIsWeb && Platform.isAndroid) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
       try {
-        final List<dynamic>? res =
-            await _channel.invokeMethod('getInstalledApps');
+        final List<dynamic>? res = await _channel.invokeMethod(
+          'getInstalledApps',
+        );
         if (res != null) {
           for (final raw in res) {
             if (raw is Map) {
@@ -41,22 +76,26 @@ class NativeAppService {
                 iconBytes = Uint8List.fromList(rawIcon.cast<int>());
               }
 
-              deviceApps.add(SelectableApp(
-                id: id,
-                name: name,
-                packageName: id,
-                iconBytes: iconBytes,
-                isInstalled: true,
-                isQuranApp: isQuran,
-                category:
-                    isQuran ? AppCategory.quran : _guessCategory(name, id),
-              ));
+              deviceApps.add(
+                SelectableApp(
+                  id: id,
+                  name: name,
+                  packageName: id,
+                  iconBytes: iconBytes,
+                  isInstalled: true,
+                  isQuranApp: isQuran,
+                  category: isQuran
+                      ? AppCategory.quran
+                      : _guessCategory(name, id),
+                ),
+              );
             }
           }
         }
       } catch (e) {
         debugPrint(
-            'Wazn: Error querying installed apps via Native Channel: $e');
+          'Wazn: Error querying installed apps via Native Channel: $e',
+        );
       }
     }
 
@@ -99,8 +138,9 @@ class NativeAppService {
   /// جلب تطبيقات القرآن الكريم الموجودة على الجهاز أو المقترحة
   Future<List<SelectableApp>> getQuranApps() async {
     final all = await getInstalledApps();
-    final deviceQuran =
-        all.where((a) => a.isQuranApp || _checkIfQuran(a.name, a.id)).toList();
+    final deviceQuran = all
+        .where((a) => a.isQuranApp || _checkIfQuran(a.name, a.id))
+        .toList();
 
     // ندمج أيضاً قائمة تطبيقات القرآن الشائعة مع تطبيقات الجهاز
     final Map<String, SelectableApp> map = {};
@@ -135,8 +175,9 @@ class NativeAppService {
   Future<bool> launchApp(String idOrPackage) async {
     if (kIsWeb) return false;
     try {
-      final res = await _channel
-          .invokeMethod<bool>('launchApp', {'package': idOrPackage});
+      final res = await _channel.invokeMethod<bool>('launchApp', {
+        'package': idOrPackage,
+      });
       return res ?? false;
     } catch (e) {
       debugPrint('Wazn: launchApp error: $e');
@@ -146,7 +187,7 @@ class NativeAppService {
 
   /// فحص إذن إحصاءات الاستخدام
   Future<bool> hasUsagePermission() async {
-    if (kIsWeb || !Platform.isAndroid) return true;
+    if (!supportsBlocking) return false;
     try {
       final res = await _channel.invokeMethod<bool>('hasUsagePermission');
       return res ?? false;
@@ -157,7 +198,7 @@ class NativeAppService {
 
   /// فتح شاشة تفعيل إذن الاستخدام
   Future<void> openUsageSettings() async {
-    if (kIsWeb || !Platform.isAndroid) return;
+    if (!supportsBlocking) return;
     try {
       await _channel.invokeMethod('openUsageSettings');
     } catch (e) {
@@ -167,7 +208,7 @@ class NativeAppService {
 
   /// فحص إذن العرض فوق التطبيقات (النافذة العائمة للحظر)
   Future<bool> hasOverlayPermission() async {
-    if (kIsWeb || !Platform.isAndroid) return true;
+    if (!supportsBlocking) return false;
     try {
       final res = await _channel.invokeMethod<bool>('hasOverlayPermission');
       return res ?? false;
@@ -178,7 +219,7 @@ class NativeAppService {
 
   /// فتح شاشة تفعيل إذن الظهور فوق التطبيقات
   Future<void> openOverlaySettings() async {
-    if (kIsWeb || !Platform.isAndroid) return;
+    if (!supportsBlocking) return;
     try {
       await _channel.invokeMethod('openOverlaySettings');
     } catch (e) {

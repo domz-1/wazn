@@ -66,15 +66,17 @@ class OnboardingDefaultsScreen extends StatelessWidget {
                     title: const Text(
                       'المصحف المدمج',
                       style: TextStyle(
-                          fontFamily: WaznFonts.ui,
-                          fontWeight: FontWeight.w600),
+                        fontFamily: WaznFonts.ui,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     subtitle: const Text(
                       'يعمل على الآيفون والأندرويد ويحسب وقتك بدقة، وفيه التفسير وعدة مظاهر.',
                       style: TextStyle(
-                          fontFamily: WaznFonts.ui,
-                          fontSize: 12.5,
-                          height: 1.5),
+                        fontFamily: WaznFonts.ui,
+                        fontSize: 12.5,
+                        height: 1.5,
+                      ),
                     ),
                   ),
                   RadioListTile<String>(
@@ -88,15 +90,17 @@ class OnboardingDefaultsScreen extends StatelessWidget {
                     title: const Text(
                       'تطبيق خارجي',
                       style: TextStyle(
-                          fontFamily: WaznFonts.ui,
-                          fontWeight: FontWeight.w600),
+                        fontFamily: WaznFonts.ui,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     subtitle: const Text(
                       'اختر تطبيق القرآن المثبت على هاتفك (آيات، المصحف الذهبي، إلخ).',
                       style: TextStyle(
-                          fontFamily: WaznFonts.ui,
-                          fontSize: 12.5,
-                          height: 1.5),
+                        fontFamily: WaznFonts.ui,
+                        fontSize: 12.5,
+                        height: 1.5,
+                      ),
                     ),
                   ),
                   if (s.mushafSource == 'external') ...[
@@ -104,7 +108,8 @@ class OnboardingDefaultsScreen extends StatelessWidget {
                     InkWell(
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (_) => const QuranAppsScreen()),
+                          builder: (_) => const QuranAppsScreen(),
+                        ),
                       ),
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
@@ -149,8 +154,11 @@ class OnboardingDefaultsScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            const Icon(Icons.arrow_forward_ios_rounded,
-                                size: 14, color: WaznColors.inkMuted),
+                            const Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 14,
+                              color: WaznColors.inkMuted,
+                            ),
                           ],
                         ),
                       ),
@@ -198,10 +206,13 @@ class OnboardingDefaultsScreen extends StatelessWidget {
             const SizedBox(height: 18),
             EmeraldButton(
               label: 'ابدأ مع وزن',
-              onTap: () => Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const AppShell()),
-                (_) => false,
-              ),
+              onTap: () {
+                state.finishOnboarding();
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const AppShell()),
+                  (_) => false,
+                );
+              },
             ),
           ],
         ),
@@ -210,22 +221,28 @@ class OnboardingDefaultsScreen extends StatelessWidget {
   }
 
   Widget _kv(String k, String v) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(k,
-                style: const TextStyle(
-                    fontFamily: WaznFonts.ui,
-                    fontSize: 14,
-                    color: WaznColors.inkMuted)),
-            Text(v,
-                style: const TextStyle(
-                    fontFamily: WaznFonts.ui,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: WaznColors.ink)),
-          ],
+    padding: const EdgeInsets.symmetric(vertical: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          k,
+          style: const TextStyle(
+            fontFamily: WaznFonts.ui,
+            fontSize: 14,
+            color: WaznColors.inkMuted,
+          ),
         ),
-      );
+        Text(
+          v,
+          style: const TextStyle(
+            fontFamily: WaznFonts.ui,
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: WaznColors.ink,
+          ),
+        ),
+      ],
+    ),
+  );
 }

@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
+import '../services/native_app_service.dart';
+import '../models/selectable_app.dart';
 import '../models/app_settings.dart';
 import '../models/hadith.dart';
 import '../models/ayah.dart';
@@ -10,8 +13,189 @@ enum HeroPhase { morning, reading, evening }
 
 class AppState extends ChangeNotifier {
   final LocalStore store;
-  AppState(this.store) {
+  final DateTime Function() clock;
+  Timer? _timer;
+  Future<void>? _refreshing;
+  bool _disposed = false;
+  AppState(this.store, {DateTime Function()? clock, bool startTimer = true})
+    : clock = clock ?? DateTime.now {
     _load();
+    if (startTimer) {
+      _timer = Timer.periodic(
+        const Duration(seconds: 2),
+        (_) => refreshNative(),
+      );
+      unawaited(refreshNative());
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String _day(DateTime date) =>
+      '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  String _date = '';
+  Map<String, dynamic> _history = {};
+  List<dynamic> _notes = [];
+  Set<String> _adhkarDone = {};
+  int _earnedSec = 0;
+  int _usedSec = 0;
+  int _readingSec = 0;
+  int _rewardedReadingSec = 0;
+  bool usagePermission = false;
+  bool overlayPermission = false;
+  bool protectionRunning = false;
+  bool get androidSupported => NativeAppService.instance.supportsBlocking;
+  bool get onboardingDone => store.onboardingDone;
+  int get readingSeconds => _readingSec;
+  int get longestStreak => (_history['longest'] as int?) ?? 0;
+  List<dynamic> get notes => List.unmodifiable(_notes);
+  List<int> get weekReading => List.generate(7, (i) {
+    final entry = _history[_day(clock().subtract(Duration(days: 6 - i)))];
+    return entry is Map ? (entry['readingSec'] as int? ?? 0) ~/ 60 : 0;
+  });
+  int get weekEarnedMinutes =>
+      List.generate(7, (i) {
+        final entry = _history[_day(clock().subtract(Duration(days: i)))];
+        return entry is Map ? (entry['earnedSec'] as int? ?? 0) : 0;
+      }).fold<int>(0, (a, b) => a + b) ~/
+      60;
+  int get completedAdhkarSessions => [
+    true,
+    false,
+  ].where((m) => (m ? _morningDone : _eveningDone) >= (m ? 8 : 5)).length;
+
+  void _rollover() {
+    final today = _day(clock());
+    if (_date == today) return;
+    _date = today;
+    _earnedSec = 0;
+    _usedSec = 0;
+    _readingSec = 0;
+    _rewardedReadingSec = 0;
+    _readingMinutesToday = 0;
+    _snoozeUsed = false;
+    _emergencyUsed = false;
+    _morningDone = 0;
+    _eveningDone = 0;
+    _adhkarDone = {};
+    _browseLeftSec = _settings.dailyLimitMinutes * 60;
+    _streak = _calculateStreak();
+  }
+
+  int _calculateStreak() {
+    var date = clock();
+    if (!((_history[_day(date)] as Map?)?['completed'] == true)) {
+      date = date.subtract(const Duration(days: 1));
+    }
+    var result = 0;
+    // A missed day breaks the streak. No implicit rest-day claims.
+    for (var i = 0; i < 36600; i++) {
+      if (!((_history[_day(date)] as Map?)?['completed'] == true)) break;
+      result++;
+      date = date.subtract(const Duration(days: 1));
+    }
+    return result;
+  }
+
+  Future<void> _writes = Future.value();
+  Future<void> _saveActivity() {
+    _history[_date] = {
+      'readingSec': _readingSec,
+      'earnedSec': _earnedSec,
+      'usedSec': _usedSec,
+      'completed': _lastRead?.startsWith(_date) ?? false,
+    };
+    _streak = _calculateStreak();
+    if (_streak > longestStreak) _history['longest'] = _streak;
+    final snapshot = <String, dynamic>{
+      'date': _date,
+      'earnedSec': _earnedSec,
+      'usedSec': _usedSec,
+      'readingSec': _readingSec,
+      'rewardedReadingSec': _rewardedReadingSec,
+      'snoozeUsed': _snoozeUsed,
+      'emergencyUsed': _emergencyUsed,
+      'lastRead': _lastRead,
+      'khatmaPage': _khatmaPage,
+      'adhkarDone': _adhkarDone.toList(),
+      'history': Map<String, dynamic>.from(_history),
+      'notes': List<dynamic>.from(_notes),
+      'selectedSurah': _selectedSurah,
+    };
+    _writes = _writes.then((_) => store.saveActivity(snapshot));
+    return _writes;
+  }
+
+  void addReadingSecond() {
+    _rollover();
+    _readingSec++;
+    _readingMinutesToday = _readingSec ~/ 60;
+    if (_readingSec % 10 == 0) unawaited(_saveActivity());
+    notifyListeners();
+  }
+
+  void saveReflection(String text, String tag) {
+    if (text.trim().isEmpty && tag.isEmpty) return;
+    _notes.add({
+      'text': text.trim(),
+      'tag': tag,
+      'at': clock().toIso8601String(),
+    });
+    unawaited(_saveActivity());
+    notifyListeners();
+  }
+
+  Future<void> finishOnboarding() async {
+    await store.finishOnboarding();
+    await refreshNative();
+  }
+
+  Future<void> refreshNative() {
+    _rollover();
+    return _refreshing ??= _refreshNative().whenComplete(
+      () => _refreshing = null,
+    );
+  }
+
+  Future<void> _refreshNative() async {
+    try {
+      _rollover();
+      if (androidSupported) {
+        usagePermission = await NativeAppService.instance.hasUsagePermission();
+        overlayPermission = await NativeAppService.instance
+            .hasOverlayPermission();
+        final ids = _settings.restrictedApps.map((id) {
+          for (final app in SelectableApp.defaultDistractingApps) {
+            if (app.id == id) return app.packageName ?? id;
+          }
+          return id;
+        }).toList();
+        NativeAppService.instance.setDailySeconds(
+          _settings.dailyLimitMinutes * 60,
+        );
+        final result = await NativeAppService.instance.configureProtection(
+          ids,
+          _settings.dailyLimitMinutes * 60 + _earnedSec,
+          store.onboardingDone && usagePermission && overlayPermission,
+        );
+        _usedSec = result['usedSeconds'] as int? ?? _usedSec;
+        protectionRunning = result['running'] == true;
+      }
+      _browseLeftSec =
+          (_settings.dailyLimitMinutes * 60 + _earnedSec - _usedSec).clamp(
+            0,
+            1 << 30,
+          );
+      await _saveActivity();
+      if (!_disposed) notifyListeners();
+    } finally {
+      // The coalesced future is cleared by refreshNative.
+    }
   }
 
   // ── الإعدادات ─────────────────────────────────────────────
@@ -19,11 +203,11 @@ class AppState extends ChangeNotifier {
   AppSettings get settings => _settings;
 
   // ── الحالة اليومية ───────────────────────────────────────
-  int _streak = 7;
-  int _browseLeftSec = 780;
+  int _streak = 0;
+  int _browseLeftSec = 2700;
   bool _snoozeUsed = false;
   bool _emergencyUsed = false;
-  int _khatmaPage = 25;
+  int _khatmaPage = 0;
   int _readingMinutesToday = 0;
   String? _lastRead;
   int _morningDone = 0;
@@ -41,12 +225,12 @@ class AppState extends ChangeNotifier {
   int get morningDone => _morningDone;
   int get eveningDone => _eveningDone;
 
-  DailyHadith get hadith => SeedHadith.forDay(DateTime.now());
+  DailyHadith get hadith => SeedHadith.forDay(clock());
   Surah get currentSurah => SeedQuran.surahs[_selectedSurah];
   List<Surah> get surahs => SeedQuran.surahs;
 
   HeroPhase get phase {
-    final h = DateTime.now().hour;
+    final h = clock().hour;
     if (h < 12) return HeroPhase.morning;
     if (h < 16) return HeroPhase.reading;
     return HeroPhase.evening;
@@ -58,7 +242,7 @@ class AppState extends ChangeNotifier {
       _settings = AppSettings(
         restrictedApps:
             (j['restrictedApps'] as List?)?.cast<String>().toSet() ??
-                _settings.restrictedApps,
+            _settings.restrictedApps,
         dailyLimitMinutes:
             j['dailyLimitMinutes'] ?? _settings.dailyLimitMinutes,
         alertBeforeMinutes:
@@ -84,13 +268,30 @@ class AppState extends ChangeNotifier {
             j['khatmaPagesPerDay'] ?? _settings.khatmaPagesPerDay,
       );
     }
-    _streak = store.streakDays;
-    _browseLeftSec = store.browseLeftSec;
-    _snoozeUsed = store.snoozeUsed;
-    _emergencyUsed = store.emergencyUsed;
-    _khatmaPage = store.khatmaPage;
-    _readingMinutesToday = store.readingMinutesToday;
-    _lastRead = store.lastRead;
+    final a = store.activity;
+    _date = a['date'] as String? ?? '';
+    _earnedSec = a['earnedSec'] as int? ?? 0;
+    _usedSec = a['usedSec'] as int? ?? 0;
+    _readingSec = a['readingSec'] as int? ?? 0;
+    _rewardedReadingSec = a['rewardedReadingSec'] as int? ?? 0;
+    _readingMinutesToday = _readingSec ~/ 60;
+    _snoozeUsed = a['snoozeUsed'] == true;
+    _emergencyUsed = a['emergencyUsed'] == true;
+    _lastRead = a['lastRead'] as String?;
+    _khatmaPage = a['khatmaPage'] as int? ?? 0;
+    _selectedSurah = (a['selectedSurah'] as int? ?? 0).clamp(
+      0,
+      surahs.length - 1,
+    );
+    _history = Map<String, dynamic>.from(a['history'] as Map? ?? {});
+    _notes = List<dynamic>.from(a['notes'] as List? ?? []);
+    _adhkarDone = (a['adhkarDone'] as List? ?? []).cast<String>().toSet();
+    _morningDone = _adhkarDone.where((k) => k.startsWith('morning:')).length;
+    _eveningDone = _adhkarDone.where((k) => k.startsWith('evening:')).length;
+    _rollover();
+    _streak = _calculateStreak();
+    _browseLeftSec = (_settings.dailyLimitMinutes * 60 + _earnedSec - _usedSec)
+        .clamp(0, 1 << 30);
     notifyListeners();
   }
 
@@ -119,6 +320,7 @@ class AppState extends ChangeNotifier {
   void updateSettings(AppSettings s) {
     _settings = s;
     _persist();
+    unawaited(refreshNative());
     notifyListeners();
   }
 
@@ -129,74 +331,76 @@ class AppState extends ChangeNotifier {
   }
 
   void setExternalQuranApp(String package, String name) {
-    updateSettings(_settings.copyWith(
-      mushafSource: 'external',
-      externalQuranPackage: package,
-      externalQuranName: name,
-    ));
+    updateSettings(
+      _settings.copyWith(
+        mushafSource: 'external',
+        externalQuranPackage: package,
+        externalQuranName: name,
+      ),
+    );
   }
 
   void selectSurah(int i) {
     _selectedSurah = i.clamp(0, surahs.length - 1);
+    unawaited(_saveActivity());
     notifyListeners();
   }
 
-  // ── منطق الورد والرصيد ────────────────────────────────────
-  /// إتمام ورد قراءة: يضيف رصيد تصفح = دقائق القراءة × المعامل، ويزيد السلسلة.
-  void completeReading(int minutes) {
-    _readingMinutesToday += minutes;
-    store.setReadingMinutesToday(_readingMinutesToday);
-    _browseLeftSec += minutes * 60 * _settings.browseRatio;
-    store.setBrowseLeftSec(_browseLeftSec);
-    _lastRead = DateTime.now().toIso8601String();
-    store.setLastRead(_lastRead!);
-    _streak += 1;
-    store.setStreakDays(_streak);
-    _khatmaPage = (_khatmaPage + _settings.khatmaPagesPerDay).clamp(0, 604);
-    store.setKhatmaPage(_khatmaPage);
+  bool completeReading(int minutes) {
+    _rollover();
+    final available = (_readingSec - _rewardedReadingSec) ~/ 60;
+    if (minutes <= 0 || available < minutes) return false;
+    _rewardedReadingSec += minutes * 60;
+    _earnedSec += minutes * 60 * _settings.browseRatio;
+    _lastRead = clock().toIso8601String();
+    // Page progress must reflect explicit page completion, not elapsed time.
+    unawaited(_saveActivity());
+    unawaited(refreshNative());
     notifyListeners();
-  }
-
-  void consumeBrowse(int seconds) {
-    _browseLeftSec = (_browseLeftSec - seconds).clamp(0, 1 << 30);
-    store.setBrowseLeftSec(_browseLeftSec);
-    notifyListeners();
+    return true;
   }
 
   void useSnooze() {
+    _rollover();
+    if (_snoozeUsed || _settings.blockMode == 'strict') return;
     _snoozeUsed = true;
-    store.setSnoozeUsed(true);
-    _browseLeftSec += _settings.snoozeMinutes * 60;
-    store.setBrowseLeftSec(_browseLeftSec);
+    _earnedSec += _settings.snoozeMinutes * 60;
+    unawaited(_saveActivity());
+    unawaited(refreshNative());
     notifyListeners();
   }
 
   void useEmergency(int minutes) {
+    _rollover();
+    if (_emergencyUsed || ![5, 10].contains(minutes)) return;
     _emergencyUsed = true;
-    store.setEmergencyUsed(true);
-    _browseLeftSec += minutes * 60;
-    store.setBrowseLeftSec(_browseLeftSec);
+    _earnedSec += minutes * 60;
+    unawaited(_saveActivity());
+    unawaited(refreshNative());
     notifyListeners();
   }
 
-  void markAdhkar(bool morning, int done) {
+  bool dhikrDone(bool morning, int index) =>
+      _adhkarDone.contains('${morning ? 'morning' : 'evening'}:$index');
+
+  void completeDhikr(bool morning, int index, int sessionLength) {
+    _rollover();
+    final key = '${morning ? 'morning' : 'evening'}:$index';
+    if (!_adhkarDone.add(key)) return;
+    final count = _adhkarDone
+        .where((k) => k.startsWith(morning ? 'morning:' : 'evening:'))
+        .length;
     if (morning) {
-      _morningDone = done;
+      _morningDone = count;
     } else {
-      _eveningDone = done;
+      _eveningDone = count;
     }
-    notifyListeners();
-  }
-
-  void resetDailyQuota() {
-    _browseLeftSec = _settings.dailyLimitMinutes * 60;
-    _snoozeUsed = false;
-    _emergencyUsed = false;
-    _readingMinutesToday = 0;
-    store.setBrowseLeftSec(_browseLeftSec);
-    store.setSnoozeUsed(false);
-    store.setEmergencyUsed(false);
-    store.setReadingMinutesToday(0);
+    if (count == sessionLength) {
+      _earnedSec += 3 * 60 * _settings.browseRatio;
+      _lastRead = clock().toIso8601String();
+    }
+    unawaited(_saveActivity());
+    unawaited(refreshNative());
     notifyListeners();
   }
 }

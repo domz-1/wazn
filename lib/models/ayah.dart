@@ -12,14 +12,12 @@ class Ayah {
     this.tafsirSaadi = '',
   });
   String tafsirFor(String source) {
-    switch (source) {
-      case 'ibn_kathir':
-        return tafsirIbnKathir;
-      case 'saadi':
-        return tafsirSaadi;
-      default:
-        return tafsirMuyassar;
-    }
+    final value = switch (source) {
+      'ibn_kathir' => tafsirIbnKathir,
+      'saadi' => tafsirSaadi,
+      _ => tafsirMuyassar,
+    };
+    return value.isEmpty ? 'التفسير غير متاح لهذه الآية بعد.' : value;
   }
 }
 
@@ -29,10 +27,11 @@ class Surah {
   final bool makki;
   final int ayahCount;
   final List<Ayah> ayahs;
-  const Surah(
-      {required this.number,
-      required this.name,
-      required this.makki,
-      required this.ayahCount,
-      required this.ayahs});
+  const Surah({
+    required this.number,
+    required this.name,
+    required this.makki,
+    required this.ayahCount,
+    required this.ayahs,
+  });
 }

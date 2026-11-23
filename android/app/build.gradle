@@ -26,9 +26,19 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        release {
+            if (project.hasProperty('WAZN_STORE_FILE')) {
+                storeFile file(project.property('WAZN_STORE_FILE'))
+                storePassword project.property('WAZN_STORE_PASSWORD')
+                keyAlias project.property('WAZN_KEY_ALIAS')
+                keyPassword project.property('WAZN_KEY_PASSWORD')
+            }
+        }
+    }
     buildTypes {
         release {
-            signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release
         }
     }
 }
