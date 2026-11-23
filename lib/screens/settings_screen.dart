@@ -48,7 +48,8 @@ class SettingsScreen extends StatelessWidget {
                     '${s.restrictedApps.length} تطبيقات مختارة (تيك توك، فيسبوك...)',
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (_) => const RestrictedAppsScreen()),
+                    builder: (_) => const RestrictedAppsScreen(),
+                  ),
                 ),
               ),
               const Divider(height: 1),
@@ -59,8 +60,10 @@ class SettingsScreen extends StatelessWidget {
               const Divider(height: 1),
               SettingRow(
                 title: 'تنبيه قبل الحظر',
-                trailing:
-                    Text('قبل ${s.alertBeforeMinutes} دقائق', style: _val),
+                trailing: Text(
+                  'قبل ${s.alertBeforeMinutes} دقائق',
+                  style: _val,
+                ),
               ),
               const Divider(height: 1),
               SettingRow(
@@ -124,15 +127,18 @@ class SettingsScreen extends StatelessWidget {
               const Divider(height: 1),
               SettingRow(
                 title: 'خطة الختمة',
-                trailing:
-                    Text('${s.khatmaPagesPerDay} صفحات يومياً', style: _val),
+                trailing: Text(
+                  '${s.khatmaPagesPerDay} صفحات يومياً',
+                  style: _val,
+                ),
               ),
               const Divider(height: 1),
               SettingRow(
                 title: 'مظهر المصحف',
                 trailing: Text(
-                    s.mushafTheme == 'paper' ? 'ورقي' : s.mushafTheme,
-                    style: _val),
+                  s.mushafTheme == 'paper' ? 'ورقي' : s.mushafTheme,
+                  style: _val,
+                ),
               ),
               const Divider(height: 1),
               const SettingRow(
@@ -143,10 +149,11 @@ class SettingsScreen extends StatelessWidget {
               SettingRow(
                 title: 'مصدر التفسير',
                 trailing: Text(
-                    s.tafsirSource == 'muyassar'
-                        ? 'التفسير الميسر'
-                        : s.tafsirSource,
-                    style: _val),
+                  s.tafsirSource == 'muyassar'
+                      ? 'التفسير الميسر'
+                      : s.tafsirSource,
+                  style: _val,
+                ),
               ),
             ]),
             const SizedBox(height: 18),
@@ -168,40 +175,41 @@ class SettingsScreen extends StatelessWidget {
               ),
             ]),
             const SizedBox(height: 18),
-            const SectionTitle('السلسلة'),
-            _group([
-              SettingRow(
-                title: 'يوم راحة أسبوعياً',
-                subtitle: 'لا يكسر السلسلة',
-                trailing: Switch(
-                  value: s.restDayEnabled,
-                  onChanged: (v) =>
-                      state.updateSettings(s.copyWith(restDayEnabled: v)),
-                  activeTrackColor: WaznColors.oasis,
-                ),
-              ),
-            ]),
-            const SizedBox(height: 18),
             const SectionTitle('الأذونات'),
+            Text(
+              state.androidSupported
+                  ? (state.protectionRunning
+                        ? 'الحماية تعمل على أندرويد'
+                        : 'الحماية متوقفة: فعّل الأذونات ثم اضغط تشغيل')
+                  : 'الحظر غير مدعوم حالياً على هذه المنصة',
+            ),
+            if (state.androidSupported)
+              FilledButton(
+                onPressed: () async {
+                  await NativeAppService.instance.resumeProtection();
+                  await state.refreshNative();
+                },
+                child: const Text('تشغيل الحماية'),
+              ),
             _group([
               SettingRow(
                 title: 'إحصاءات الاستخدام',
                 subtitle: 'اضغط للفتح والإذن (أندرويد)',
                 onTap: () => NativeAppService.instance.openUsageSettings(),
-                trailing: const _Status(enabled: true),
+                trailing: _Status(enabled: state.usagePermission),
               ),
               const Divider(height: 1),
               SettingRow(
                 title: 'العرض فوق التطبيقات',
                 subtitle: 'لحظر التطبيقات بنافذة وزن (أندرويد)',
                 onTap: () => NativeAppService.instance.openOverlaySettings(),
-                trailing: const _Status(enabled: true),
+                trailing: _Status(enabled: state.overlayPermission),
               ),
               const Divider(height: 1),
               const SettingRow(
                 title: 'وقت الشاشة',
-                subtitle: 'آيفون (iOS)',
-                trailing: _Status(enabled: true),
+                subtitle: 'غير متاح بعد على آيفون',
+                trailing: _Status(enabled: false),
               ),
             ]),
             const SizedBox(height: 8),
@@ -219,7 +227,8 @@ class SettingsScreen extends StatelessWidget {
                 title: 'شريك المساءلة',
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (_) => const AccountabilityScreen()),
+                    builder: (_) => const AccountabilityScreen(),
+                  ),
                 ),
               ),
               const Divider(height: 1),
@@ -244,13 +253,13 @@ class SettingsScreen extends StatelessWidget {
   );
 
   Widget _group(List<Widget> children) => Container(
-        decoration: BoxDecoration(
-          color: WaznColors.white,
-          borderRadius: BorderRadius.circular(WaznRadii.tile),
-          border: Border.all(color: WaznColors.sandLine),
-        ),
-        child: Column(children: children),
-      );
+    decoration: BoxDecoration(
+      color: WaznColors.white,
+      borderRadius: BorderRadius.circular(WaznRadii.tile),
+      border: Border.all(color: WaznColors.sandLine),
+    ),
+    child: Column(children: children),
+  );
 }
 
 class _Status extends StatelessWidget {
@@ -258,25 +267,25 @@ class _Status extends StatelessWidget {
   const _Status({required this.enabled});
   @override
   Widget build(BuildContext context) => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: enabled ? WaznColors.oasis : WaznColors.goldOld,
-            ),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            enabled ? 'مفعّل' : 'غير مفعّل',
-            style: const TextStyle(
-              fontFamily: WaznFonts.ui,
-              fontSize: 13,
-              color: WaznColors.oasis,
-            ),
-          ),
-        ],
-      );
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: enabled ? WaznColors.oasis : WaznColors.goldOld,
+        ),
+      ),
+      const SizedBox(width: 6),
+      Text(
+        enabled ? 'مفعّل' : 'غير مفعّل',
+        style: const TextStyle(
+          fontFamily: WaznFonts.ui,
+          fontSize: 13,
+          color: WaznColors.oasis,
+        ),
+      ),
+    ],
+  );
 }
