@@ -1,133 +1,39 @@
-<div align="center">
+# Wazn
 
-<img src="assets/branding/banner.png" alt="Wazn — Make your time weigh more" width="820">
+Arabic-first Flutter digital-wellbeing prototype. Worship earns a shared browsing-time budget across selected apps. This branch is for review and device testing, not a certified production release.
 
-<br/>
+## Implemented
 
-<img src="https://img.shields.io/badge/Flutter-3.4%2B-02569B?logo=flutter&logoColor=white" alt="Flutter">
-<img src="https://img.shields.io/badge/Dart-3.4%2B-0175C2?logo=dart&logoColor=white" alt="Dart">
-<img src="https://img.shields.io/badge/Platforms-Android%20%C2%B7%20iOS%20%C2%B7%20Web-0E3A31" alt="Platforms">
-<img src="https://img.shields.io/badge/Language-Arabic%20RTL-E9C46A" alt="Arabic RTL">
-<img src="https://img.shields.io/badge/Offline--First-yes-1F6B5C" alt="Offline-first">
-<img src="https://img.shields.io/badge/License-MIT-D4A24C" alt="MIT">
+- Android installed-app selection, user-enabled usage monitoring and a blocking overlay with a persistent foreground-service notification and stop action.
+- Local-date quota resets, once-daily snooze/emergency use, date-based streaks, persisted activity and reflection notes.
+- Reading time counted only while the reading screen is foreground and the app is resumed. Claims cannot exceed recorded whole minutes. This measures screen time, not attention or verified worship. External Quran-app reading does not earn time yet.
+- Adhkar counters use each item's target. A completed morning or evening session earns a fixed three-minute equivalent at the configured browsing ratio, once per date.
+- All 114 surahs and 6,236 verse records offline through `quran` 1.4.1. Existing sample tafsir is retained; missing tafsir is clearly labeled. See THIRD_PARTY_NOTICES.md.
+- Verse recitation streaming, Mishary Alafasy, through the package's Islamic Network CDN URLs. Internet is required, no download cache yet.
+- Real local reading charts, streak statistics, saved notes and manually copied streak summaries. No partner backend or invitation link is claimed.
 
-<p><strong>Turn doom-scrolling time into worship and remembrance.</strong><br/>
-Wazn blocks distracting apps after a daily limit — and only unlocks them when you finish a reading or adhkar session.</p>
+## Platform limits
 
-</div>
+Android enforcement is best-effort, not tamper-proof. It requires Usage Access and Display over other apps. Settings, the launcher, the dialer and Wazn itself are excluded from blocking. Disabling permissions, force-stopping or uninstalling Wazn disables protection. OEM battery restrictions can stop monitoring. The stop action is respected until the user taps Start protection again.
 
----
+After reboot, open Wazn and start protection. On restart, today's usage events are reconciled for currently selected packages. Selecting a new app includes its usage earlier that same day. Day rollover also runs natively while the Flutter UI is closed. One shared quota is used, not separate per-app limits.
 
-## 🎯 Why Wazn
+iOS and Web support worship/local history UI only. iOS Screen Time authorization and blocking are not implemented. Web cannot block native applications. No permission status should be interpreted as iOS protection.
 
-> Every minute you read earns you **3 minutes** of browsing. Your time should *weigh* something.
+## Run and validate
 
-Most screen-time apps are punitive. **Wazn** offers a fair trade: give a little worship (Quran, adhkar, reflection) → earn leisure time. The Mushaf, tafsir, adhkar, and the daily hadith all work **fully offline**.
+Validated with Flutter 3.50.1 / Dart 3.14.0. Dart minimum is 3.11. Use the committed lockfile.
 
-## ✨ Features
-
-- **📵 Smart blocking** — daily limit per app, gentle countdown, one daily snooze, a 30-second gradual block, and an emergency unlock (once/day).
-- **📖 Built-in Mushaf** — Quran with tafsir on tap (Al-Muyassar), adjustable font & theme, full-screen reading.
-- **📿 Adhkar & Tasbih** — morning/evening adhkar with a beautiful counter.
-- **🕌 Daily hadith** — curated, with source and grade shown.
-- **📊 Streaks & stats** — reading minutes, recovered time, weekly rest day that never breaks your streak.
-- **🤝 Accountability partner** — share your streak only, never your screen time.
-- **🌙 Offline-first** — everything religious works with zero network.
-- **🌍 Arabic-first** — full RTL, native Arabic typography (Aref Ruqaa · IBM Plex Sans Arabic · Amiri).
-
-## 🎨 Brand
-
-| Token | Hex | Use |
-|---|---|---|
-| Emerald Night | `#07241F` | Dark surfaces |
-| Emerald | `#0E3A31` | Primary |
-| Oasis Green | `#1F6B5C` | Active states |
-| Gold | `#E9C46A` | Primary action |
-| Antique Gold | `#D4A24C` | Gradients |
-| Sand | `#FBF7EE` | Light background |
-| Warm Sand | `#F1E9D8` | Cards |
-| Ink | `#10251F` | Text |
-
-**Typography:** Aref Ruqaa (wordmark) · IBM Plex Sans Arabic (UI) · Amiri (Quran & hadith).
-
-## 📱 Screens (25)
-
-| Screen | File |
-|---|---|
-| Splash | `splash_screen.dart` |
-| Onboarding · Apps & limit | `onboarding_apps_screen.dart` |
-| Onboarding · Suggested defaults | `onboarding_defaults_screen.dart` |
-| Home · next step | `home_screen.dart` |
-| Block + snooze | `block_screen.dart` |
-| Pre-block alert & widgets | `pre_block_alert_screen.dart` |
-| Unlocked | `unlocked_screen.dart` |
-| Worship · Mushaf | `worship_screen.dart` |
-| Worship · Adhkar | `adhkar_screen.dart` |
-| Dhikr counter | `dhikr_counter_screen.dart` |
-| Reading · tap an ayah | `reading_screen.dart` |
-| Reading · tafsir / themes / full-screen | `reading_screen.dart` (sheets) |
-| Open intent | `open_intent_screen.dart` |
-| Gradual block | `gradual_block_screen.dart` |
-| Emergency unlock | `emergency_screen.dart` |
-| Reflection after reading | `reflection_screen.dart` |
-| Stats + rest day | `stats_screen.dart` |
-| Settings | `settings_screen.dart` |
-| Accountability partner | `accountability_screen.dart` |
-| Permission off | `permission_screen.dart` |
-
-## 🚀 Getting Started
-
-```bash
+```sh
 flutter pub get
-
-# Android / desktop
+flutter analyze --no-fatal-infos
+flutter test
+flutter build web --release --no-wasm-dry-run
 flutter run
-
-# Web
-flutter run -d chrome
-
-# Release APK
-flutter build apk --release
 ```
 
-> **Requires:** Flutter 3.4+ · Dart 3.4+
+Android requires a local Android SDK/JDK 17. Before distribution, configure a private release keystore through local Gradle properties. Never commit signing keys or passwords. See docs/ACCEPTANCE.md for the required device checks. No signing key is generated by this change.
 
-## 🏗️ Architecture
+## Deliberately not claimed as complete
 
-```
-lib/
-├── main.dart              # entry · RTL · Provider
-├── theme/                 # colors, theme, fonts
-├── models/                # Ayah, Dhikr, Hadith, AppSettings
-├── data/
-│   ├── app_state.dart     # central ChangeNotifier state
-│   ├── local_store.dart   # SharedPreferences persistence
-│   └── seed_*.dart        # bundled offline data
-├── widgets/               # logo, buttons, cards, bottom nav
-└── screens/               # 20 screens
-```
-
-Every screen talks only to `AppState`, which reads from `LocalStore` before any network. Native Kotlin/Swift modules for real usage-time reading slot in behind that interface.
-
-## 📦 Offline
-
-| Works offline | Needs network |
-|---|---|
-| ✅ Quran + tafsir (bundled sample) | ⚠️ Prayer times |
-| ✅ Adhkar + tasbih | ⚠️ Audio recitation |
-| ✅ Daily hadith | |
-| ✅ Streaks, stats, quota | |
-
-## 🔮 Roadmap
-
-- [ ] Full Quran archive (spa5k/tafsir_api) in SQLite
-- [ ] Native Kotlin module (UsageStats) for real usage time
-- [ ] Native Swift module (Screen Time / FamilyControls)
-- [ ] Audio recitation with offline pre-download
-- [ ] Accountability partner backend
-
-## 📄 License
-
-MIT © [Adham AbuElenin](https://github.com/domz-1)
-
-<div align="center"><sub>Built with care — make your time weigh more ⚖️</sub></div>
+Full tafsir and source-reviewed complete adhkar/hadith collections, offline audio, voice recording, automatic accountability sharing, prayer notifications, weekly rest-day policy and iOS enforcement remain future work. The old rest-day switch and false partner-invite button were removed rather than pretending to work. Legacy demo activity is not migrated into real history; app selection/settings are retained.
